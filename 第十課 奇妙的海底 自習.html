@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>三年級中文詞彙大冒險！ 第十課 奇妙的海底 </title>
+  <style>
+    :root {
+      --primary: #1565c0;
+      --secondary: #ffb300;
+      --accent: #ff3d00;
+      --bg-color: #e3f2fd;
+      --card-bg: #ffffff;
+      --text-color: #212121;
+    }
+
+    body {
+      font-family: 'Comic Sans MS', 'Microsoft JhengHei', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0d47a1, #1e88e5);
+      color: white;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    h1 { margin: 0 0 10px 0; font-size: 26px; }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      background-color: var(--secondary);
+      border: none;
+      padding: 10px 18px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+
+    .nav-btn:hover { transform: scale(1.05); }
+    .nav-btn.active { background-color: var(--accent); color: white; }
+
+    .container {
+      max-width: 850px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 18px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      border: 3px solid #bbdefb;
+    }
+
+    .word-title {
+      color: var(--primary);
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .audio-btn {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 15px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .audio-btn:hover { background-color: #388e3c; }
+
+    .cantonese-tip {
+      background-color: #fff3e0;
+      border-left: 4px solid var(--secondary);
+      padding: 8px 12px;
+      margin-top: 8px;
+      font-size: 14px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .option-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: #f8f9fa;
+      border: 2px solid #ced4da;
+      padding: 10px 15px;
+      margin: 6px 0;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .option-btn:hover { background: #e2e6ea; }
+
+    .feedback { font-weight: bold; margin-top: 8px; }
+    .correct { color: #2e7d32; }
+    .incorrect { color: #c62828; }
+
+    .fill-blank-input {
+      font-size: 16px;
+      padding: 4px 8px;
+      border: 2px solid var(--primary);
+      border-radius: 5px;
+      width: 120px;
+      text-align: center;
+    }
+
+    .submit-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .word-bank {
+      background: #e1f5fe;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      font-weight: bold;
+      line-height: 1.6;
+      border: 2px dashed var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🚀 小學三年級中文詞彙大冒險！ 🐾</h1>
+    <div class="nav-buttons">
+      <button class="nav-btn active" onclick="switchPage(1)">頁面一：16個詞義與例句</button>
+      <button class="nav-btn" onclick="switchPage(2)">頁面二：16道多項選擇題</button>
+      <button class="nav-btn" onclick="switchPage(3)">頁面三：16道填充題</button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- 頁面一：16 個詞義、例句與粵普分別 -->
+    <div id="page1" class="page active">
+      <h2>📚 第一頁：16 個詞義學習與粵普對照</h2>
+      <p>點擊「🔊 粵語朗讀」即可聽到標準廣東話發音，並學習粵語與普通話的分別！</p>
+      <div id="words-list"></div>
+    </div>
+
+    <!-- 頁面二：16 道選擇題 -->
+    <div id="page2" class="page">
+      <h2>🎯 第二頁：16 道多項選擇題</h2>
+      <div id="mc-list"></div>
+    </div>
+
+    <!-- 頁面三：16 道填充題 -->
+    <div id="page3" class="page">
+      <h2>✏️ 第三頁：16 道填充題挑戰</h2>
+      <div class="word-bank">
+        📌 參考詞庫：[ 奇妙 | 搜集 | 千奇百怪 | 威風凜凜 | 溫順 | 龐大 | 從容不迫 | 神祕 | 參觀 | 佈滿 | 生氣 | 吸引 | 依舊 | 悠閒 | 五彩繽紛 | 多姿多彩 ]
+      </div>
+      <div id="fill-list"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // 16 個詞語基礎數據
+    const vocabularyData = [
+      { id: 1, word: "奇妙", meaning: "稀奇美妙，令人感到驚訝、有趣。", example: "海底世界藏着許多奇妙的生物，令人嘖嘖稱奇。", cantonese: "口語常講「好神奇」，作文書面語要寫「奇妙」。" },
+      { id: 2, word: "搜集", meaning: "到處尋找，再把東西收集起來。", example: "為了完成專題研習，哥哥到圖書館搜集資料。", cantonese: "粵語口語講「搵資料」或「搜集」，用法大致相同。" },
+      { id: 3, word: "千奇百怪", meaning: "形狀、種類各式各樣，十分奇特。", example: "沙灘上有千奇百怪的石頭，形態各不相同。", cantonese: "形容古怪多樣，廣東話亦常直接使用此成語。" },
+      { id: 4, word: "威風凜凜", meaning: "氣勢雄壯，顯得很有氣派。", example: "校旗隊的同學穿上整齊的制服，看起來威風凜凜。", cantonese: "口語會講「好威」、「好有型」，書面語用「威風凜凜」。" },
+      { id: 5, word: "溫順", meaning: "性情柔和馴良，聽話、不暴躁。", example: "鄰居家的那隻金毛尋回犬性格溫順，從不亂叫。", cantonese: "口語講「好乖」、「好聽話」，書面語用「溫順」。" },
+      { id: 6, word: "龐大", meaning: "體積、規模非常巨大。", example: "這座郵輪的體積非常龐大，像一座漂浮的海上城市。", cantonese: "口語講「好大隻」、「好巨型」，書面語用「龐大」。" },
+      { id: 7, word: "從容不迫", meaning: "舉止鎮定，不慌不忙。", example: "面對突如其來的難題，小明依然從容不迫地思考。", cantonese: "口語講「不慌不忙」、「定過抬市」，書面語用「從容不迫」。" },
+      { id: 8, word: "神祕", meaning: "難以猜測、不容易明白，充滿未知。", example: "那座荒廢已久的古堡，在月色下顯得格外神祕。", cantonese: "口語會講「好神秘」，字形相同。" },
+      { id: 9, word: "參觀", meaning: "前往地方觀看、遊覽。", example: "今天下午，爸爸帶我們去歷史博物館參觀展覽。", cantonese: "廣東話與普通話用法一致。" },
+      { id: 10, word: "佈滿", meaning: "到處都是，覆蓋滿整個地方。", example: "春風一吹，漫山遍野都佈滿了五顏六色的小野花。", cantonese: "口語講「滿佈」、「周圍都係」，書面語寫「佈滿」。" },
+      { id: 11, word: "生氣", meaning: "①活力、朝氣；②發怒、不開心。", example: "雨過天晴後，公園裡的草木長出嫩芽，顯得很有生氣。", cantonese: "注意「充滿生氣」指朝氣，與口語「發脾氣/生氣」意思不同。" },
+      { id: 12, word: "吸引", meaning: "引起人注意，讓人想要靠近觀看。", example: "櫥窗裡精美的甜點，吸引了許多路人的目光。", cantonese: "廣東話與普通話用法一致。" },
+      { id: 13, word: "依舊", meaning: "依然、跟從前一樣，沒有改變。", example: "雖然搬家多年，奶奶依舊保持著清晨散步的習慣。", cantonese: "口語講「照舊」、「一樣」，書面語要用「依舊」。" },
+      { id: 14, word: "悠閒", meaning: "清閒自在，不用趕忙、沒有壓力。", example: "假期裡，爸爸坐在露台上喝茶，顯得十分悠閒。", cantonese: "口語講「好舒服」、「好閒」，書面語用「悠閒」。" },
+      { id: 15, word: "五彩繽紛", meaning: "顏色繁多，燦爛美麗（專指顏色）。", example: "花園裏的鬱金香開花了，五彩繽紛，非常好看。", cantonese: "口語講「五顏六色」，書面語寫成語「五彩繽紛」。" },
+      { id: 16, word: "多姿多彩", meaning: "內容、形式豐富，多種多樣（指活動/生活）。", example: "學校舉辦了許多活動，讓我們的校園生活多姿多彩。", cantonese: "注意：形容色彩用「五彩繽紛」，形容生活/活動才用「多姿多彩」。" }
+    ];
+
+    // 16 道選擇題數據
+    const mcQuestions = [
+      { q: "1. 大自然裡有很多_______的現象，例如毛毛蟲變成蝴蝶，令人驚嘆。", options: ["A. 奇妙", "B. 龐大", "C. 溫順"], ans: "A", exp: "「奇妙」指神奇美妙。" },
+      { q: "2. 為了完成這次專題，哥哥到圖書館_______了大量太空資料。", options: ["A. 參觀", "B. 搜集", "C. 吸引"], ans: "B", exp: "搜集資料是固定搭配。" },
+      { q: "3. 博物館收藏了許多形態_______的奇石，吸引了不少遊客。", options: ["A. 威風凜凜", "B. 五彩繽紛", "C. 千奇百怪"], ans: "C", exp: "「千奇百怪」形容形狀各式各樣。" },
+      { q: "4. 校旗隊同學穿上整齊制服，行進時看起來_______。", options: ["A. 威風凜凜", "B. 悠閒", "C. 溫順"], ans: "A", exp: "「威風凜凜」形容氣勢威武。" },
+      { q: "5. 那隻金毛尋回犬性格_______，從來不會對路人亂叫。", options: ["A. 神祕", "B. 溫順", "C. 龐大"], ans: "B", exp: "「溫順」形容性格溫和。" },
+      { q: "6. 這座郵輪體積非常_______，像一座漂浮在海上的城市。", options: ["A. 龐大", "B. 悠閒", "C. 生氣"], ans: "A", exp: "「龐大」形容體積巨大。" },
+      { q: "7. 面對突如其來的難題，小明依然_______地思考。", options: ["A. 千奇百怪", "B. 從容不迫", "C. 依舊"], ans: "B", exp: "「從容不迫」形容沉著鎮定。" },
+      { q: "8. 荒廢已久的古堡在月色下顯得格外_______。", options: ["A. 神祕", "B. 參觀", "C. 溫順"], ans: "A", exp: "「神祕」指難以看透、充滿未知。" },
+      { q: "9. 今天下午，爸爸帶我們去博物館_______展覽。", options: ["A. 搜集", "B. 佈滿", "C. 參觀"], ans: "C", exp: "去博物館看展覽稱為「參觀」。" },
+      { q: "10. 春風一吹，漫山遍野都_______了五顏六色的小野花。", options: ["A. 佈滿", "B. 吸引", "C. 悠閒"], ans: "A", exp: "「佈滿」指到處都是。" },
+      { q: "11. 一場春雨過後，公園裡的草木顯得格外有_______。", options: ["A. 神祕", "B. 生氣", "C. 龐大"], ans: "B", exp: "「生氣」在這裡指生命力與朝氣。" },
+      { q: "12. 精美的甜點散發香味，_______了許多路人的目光。", options: ["A. 吸引", "B. 依舊", "C. 參觀"], ans: "A", exp: "「吸引」指引起注意。" },
+      { q: "13. 雖然搬家多年，奶奶_______保持著每天散步的習慣。", options: ["A. 依舊", "B. 溫順", "C. 從容不迫"], ans: "A", exp: "「依舊」表示依然、沒有改變。" },
+      { q: "14. 爸爸坐在露台上一邊喝茶一邊看報，十分_______。", options: ["A. 悠閒", "B. 威風凜凜", "C. 佈滿"], ans: "A", exp: "「悠閒」形容清閒自在。" },
+      { q: "15. 花園裡的鬱金香開花了，紅黃紫相間，真是_______。", options: ["A. 多姿多彩", "B. 五彩繽紛", "C. 千奇百怪"], ans: "B", exp: "形容色彩鮮豔繁多用「五彩繽紛」。" },
+      { q: "16. 學校舉辦交流團與運動會，讓生活變得_______。", options: ["A. 五彩繽紛", "B. 多姿多彩", "C. 從容不迫"], ans: "B", exp: "形容生活或活動豐富用「多姿多彩」。" }
+    ];
+
+    // 16 道填充題數據
+    const fillQuestions = [
+      { id: 1, text: "海底世界藏着許多【 】的生物，令人驚嘆。", ans: "奇妙" },
+      { id: 2, text: "為了寫專題報告，我到網絡上【 】了許多資料。", ans: "搜集" },
+      { id: 3, text: "山上有很多【 】的石頭，有的像兔子，有的像老鷹。", ans: "千奇百怪" },
+      { id: 4, text: "獅子【 】地站在山崖上，保護著自己的領地。", ans: "威風凜凜" },
+      { id: 5, text: "小鹿性格十分【 】，輕輕走到遊客面前吃草。", ans: "溫順" },
+      { id: 6, text: "大象的身體非常【 】，需要吃很多食物。", ans: "龐大" },
+      { id: 7, text: "演講比賽時，姐姐【 】地登台回答問題。", ans: "從容不迫" },
+      { id: 8, text: "森林深處有一條【 】的小路，不知道通往何處。", ans: "神祕" },
+      { id: 9, text: "老師帶領我們去科學館【 】全新的機器人展覽。", ans: "參觀" },
+      { id: 10, text: "夜晚的天空【 】了閃爍的星星。", ans: "佈滿" },
+      { id: 11, text: "春天到了，萬物復蘇，花園裡處處充滿【 】。", ans: "生氣" },
+      { id: 12, text: "精彩的魔術表演【 】了全場觀眾的眼球。", ans: "吸引" },
+      { id: 13, text: "雖然經過許多年，這間老店【 】深受顧客喜愛。", ans: "依舊" },
+      { id: 14, text: "假期裡，我和家人在海灘上【 】地散步。", ans: "悠閒" },
+      { id: 15, text: "節日的夜空中綻放著【 】的煙花。", ans: "五彩繽紛" },
+      { id: 16, text: "豐富的課外活動使我們的童年生活【 】。", ans: "多姿多彩" }
+    ];
+
+    // 初始化頁面數據
+    function init() {
+      // 渲染第一頁：16個詞語卡片
+      const wordsContainer = document.getElementById('words-list');
+      vocabularyData.forEach(item => {
+        wordsContainer.innerHTML += `
+          <div class="card">
+            <div class="word-title">
+              <span>${item.id}. ${item.word}</span>
+              <button class="audio-btn" onclick="speakCantonese('${item.word}。${item.example}')">🔊 粵語朗讀</button>
+            </div>
+            <p><strong>釋義：</strong>${item.meaning}</p>
+            <p><strong>例句：</strong>${item.example}</p>
+            <div class="cantonese-tip">💡 <strong>粵普分別：</strong>${item.cantonese}</div>
+          </div>
+        `;
+      });
+
+      // 渲染第二頁：16道選擇題
+      const mcContainer = document.getElementById('mc-list');
+      mcQuestions.forEach((item, index) => {
+        let optsHtml = item.options.map(opt => {
+          let letter = opt.charAt(0);
+          let isCorrect = letter === item.ans;
+          return `<button class="option-btn" onclick="checkMC(this, ${isCorrect}, '${item.exp}')">${opt}</button>`;
+        }).join('');
+
+        mcContainer.innerHTML += `
+          <div class="card">
+            <p><strong>${item.q}</strong></p>
+            ${optsHtml}
+            <div class="feedback"></div>
+          </div>
+        `;
+      });
+
+      // 渲染第三頁：16道填充題
+      const fillContainer = document.getElementById('fill-list');
+      fillQuestions.forEach(item => {
+        let parts = item.text.split("【 】");
+        fillContainer.innerHTML += `
+          <div class="card">
+            <p>${item.id}. ${parts[0]} <input type="text" id="fill-in-${item.id}" class="fill-blank-input"> ${parts[1]}</p>
+            <button class="submit-btn" onclick="checkFill(${item.id}, '${item.ans}')">核對答案</button>
+            <div id="fill-fb-${item.id}" class="feedback"></div>
+          </div>
+        `;
+      });
+    }
+
+    // 頁面切換
+    function switchPage(pageNum) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('page' + pageNum).classList.add('active');
+      document.querySelectorAll('.nav-btn')[pageNum - 1].classList.add('active');
+    }
+
+    // 粵語發音功能 (Web Speech API)
+    function speakCantonese(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-HK';
+        utterance.rate = 0.85; // 放慢語速適合小朋友學習
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert("你的瀏覽器暫時不支援語音發音。");
+      }
+    }
+
+    // 選擇題檢查
+    function checkMC(btn, isCorrect, exp) {
+      const card = btn.parentElement;
+      const fb = card.querySelector('.feedback');
+      if (isCorrect) {
+        fb.className = "feedback correct";
+        fb.innerText = "🎉 答對了！" + exp;
+      } else {
+        fb.className = "feedback incorrect";
+        fb.innerText = "❌ 再想想看！提示：" + exp;
+      }
+    }
+
+    // 填充題檢查
+    function checkFill(id, correctAns) {
+      const userAns = document.getElementById('fill-in-' + id).value.trim();
+      const fb = document.getElementById('fill-fb-' + id);
+      if (userAns === correctAns || userAns === correctAns.replace('佈', '布')) {
+        fb.className = "feedback correct";
+        fb.innerText = "🎉 完全正確！太棒了！";
+      } else {
+        fb.className = "feedback incorrect";
+        fb.innerText = `❌ 再試試看！正確答案是「${correctAns}」。`;
+      }
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
