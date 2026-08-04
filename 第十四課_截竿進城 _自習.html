@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>四年級中文詞彙大冒險（Toy Story 冒險得分版）</title>
+  <style>
+    :root {
+      --primary-blue: #1e88e5;    /* 鋼鐵/巴斯藍 */
+      --woody-yellow: #fdd835;   /* 胡迪黃 */
+      --buzz-green: #7cb342;     /* 巴斯綠 */
+      --buzz-purple: #8e24aa;    /* 巴斯紫 */
+      --bg-yellow: #fffde7;       /* 溫暖黃背景 */
+      --card-bg: #ffffff;
+      --text-dark: #263238;
+      --accent-orange: #fb8c00;  /* 活力橙 */
+    }
+
+    body {
+      font-family: 'Comic Sans MS', 'Microsoft JhengHei', sans-serif;
+      background-color: var(--bg-yellow);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary-blue), var(--buzz-purple));
+      color: var(--woody-yellow);
+      padding: 18px 15px;
+      text-align: center;
+      border-bottom: 5px solid var(--woody-yellow);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    h1 { 
+      margin: 0 0 12px 0; 
+      font-size: 26px; 
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      background-color: var(--woody-yellow);
+      color: #37474f;
+      border: 3px solid var(--buzz-green);
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+      transition: all 0.2s ease-in-out;
+    }
+
+    .nav-btn:hover { 
+      transform: scale(1.05); 
+      background-color: #ffee58;
+    }
+
+    .nav-btn.active { 
+      background-color: var(--buzz-purple); 
+      color: white; 
+      border-color: var(--woody-yellow);
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .score-banner {
+      background: #e8f5e9;
+      border: 2px solid var(--buzz-green);
+      border-radius: 12px;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      border: 3px solid #c0ca33;
+    }
+
+    .word-title {
+      color: var(--primary-blue);
+      font-size: 21px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px dashed #c0ca33;
+      padding-bottom: 8px;
+    }
+
+    .audio-btn {
+      background-color: var(--buzz-green);
+      color: white;
+      border: 2px solid #558b2f;
+      padding: 6px 14px;
+      border-radius: 15px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+
+    .audio-btn:hover { background-color: #689f38; }
+
+    .cantonese-tip {
+      background-color: #f3e5f5;
+      border-left: 4px solid var(--buzz-purple);
+      padding: 8px 12px;
+      margin-top: 10px;
+      font-size: 14px;
+      border-radius: 0 8px 8px 0;
+      color: #4a148c;
+    }
+
+    .option-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: #f1f8e9;
+      border: 2px solid #aed581;
+      color: var(--text-dark);
+      padding: 10px 15px;
+      margin: 8px 0;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .option-btn:hover { background: #dcedc8; }
+    .option-btn.selected-correct { background-color: #a5d6a7; border-color: #2e7d32; font-weight: bold; }
+    .option-btn.selected-incorrect { background-color: #ef9a9a; border-color: #c62828; }
+
+    .feedback { font-weight: bold; margin-top: 10px; }
+    .correct { color: #2e7d32; }
+    .incorrect { color: #c62828; }
+
+    .fill-blank-input {
+      font-size: 16px;
+      padding: 4px 8px;
+      border: 2px solid var(--primary-blue);
+      background-color: #f1f8e9;
+      border-radius: 5px;
+      width: 130px;
+      text-align: center;
+    }
+
+    .submit-btn {
+      background-color: var(--primary-blue);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .submit-btn:hover { background-color: #1565c0; }
+
+    .word-bank {
+      background: #fff8e1;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      font-weight: bold;
+      line-height: 1.6;
+      color: #f57f17;
+      border: 2px dashed var(--accent-orange);
+    }
+
+    /* Summary Page Styles */
+    .summary-card {
+      background: #ffffff;
+      border: 4px solid var(--buzz-purple);
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+
+    .score-table {
+      width: 100%;
+      margin: 20px 0;
+      border-collapse: collapse;
+      font-size: 18px;
+    }
+
+    .score-table th, .score-table td {
+      padding: 12px;
+      border-bottom: 2px solid #e0e0e0;
+      text-align: center;
+    }
+
+    .score-table th { background-color: #f3e5f5; color: var(--buzz-purple); }
+
+    .total-row {
+      font-size: 22px;
+      font-weight: bold;
+      background-color: #fff9c4;
+      color: #e65100;
+    }
+
+    .reset-btn {
+      background-color: var(--accent-orange);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-top: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .reset-btn:hover { background-color: #e65100; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🚀 飛向宇宙！小學四年級中文詞彙大冒險 🤠</h1>
+    <div class="nav-buttons">
+      <button class="nav-btn active" onclick="switchPage(1)">頁面一：詞義學習</button>
+      <button class="nav-btn" onclick="switchPage(2)">頁面二：選擇題 (17分)</button>
+      <button class="nav-btn" onclick="switchPage(3)">頁面三：填充題 (17分)</button>
+      <button class="nav-btn" onclick="switchPage(4)">頁面四：總成績總結 🏆</button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- 頁面一：17 個詞義、例句與粵普分別 -->
+    <div id="page1" class="page active">
+      <h2>📚 第一頁：17 個詞義學習與粵普對照</h2>
+      <p>點擊「🔊 粵語朗讀」即可聽到標準廣東話發音，並學習粵語與普通話的分別！</p>
+      <div id="words-list"></div>
+    </div>
+
+    <!-- 頁面二：17 道選擇題 -->
+    <div id="page2" class="page">
+      <div class="score-banner">
+        <span>🎯 頁面二得分（選擇題）：</span>
+        <span id="mc-score-display">0 / 17 分</span>
+      </div>
+      <h2>🎯 第二頁：17 道多項選擇題</h2>
+      <div id="mc-list"></div>
+    </div>
+
+    <!-- 頁面三：17 道填充題 -->
+    <div id="page3" class="page">
+      <div class="score-banner">
+        <span>✏️ 頁面三得分（填充題）：</span>
+        <span id="fill-score-display">0 / 17 分</span>
+      </div>
+      <h2>✏️ 第三頁：17 道填充題大挑戰</h2>
+      <div class="word-bank">
+        📌 參考詞庫：[ 截 | 城鎮 | 繁榮 | 豎 | 橫 | 寬 | 比畫 | 汗流浹背 | 買賣 | 撐 | 無計可施 | 苦惱 | 愁眉苦臉 | 毫不考慮 | 鋸 | 用途 | 考慮 ]
+      </div>
+      <div id="fill-list"></div>
+    </div>
+
+    <!-- 頁面四：總成績與小結 -->
+    <div id="page4" class="page">
+      <div class="summary-card">
+        <h2>🏆 學習大冒險 - 總成績報告 🏆</h2>
+        <p>太棒了！來看看你在各個頁面的練習得分吧：</p>
+        
+        <table class="score-table">
+          <thead>
+            <tr>
+              <th>練習項目</th>
+              <th>題數</th>
+              <th>得分</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>頁面二：多項選擇題</td>
+              <td>17 題</td>
+              <td id="summary-mc-score">0 / 17</td>
+            </tr>
+            <tr>
+              <td>頁面三：填充題挑戰</td>
+              <td>17 題</td>
+              <td id="summary-fill-score">0 / 17</td>
+            </tr>
+            <tr class="total-row">
+              <td>總成績 (Subtotal / Total)</td>
+              <td>34 題</td>
+              <td id="summary-total-score">0 / 34</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div id="praise-message" style="font-size: 20px; font-weight: bold; color: var(--buzz-purple); margin: 15px 0;">
+          💪 完成所有題目後來看看你的等級評語吧！
+        </div>
+
+        <button class="reset-btn" onclick="resetQuiz()">🔄 重新挑戰全卷</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // 得分記錄
+    let mcScores = new Array(17).fill(0);
+    let mcAnswered = new Array(17).fill(false);
+    let fillScores = new Array(17).fill(0);
+
+    // 17 個詞語數據
+    const vocabularyData = [
+      { id: 1, word: "截", meaning: "切斷、斷開；阻擋使人停止前進。", example: "警察上前截住衝出馬路的小朋友，保障他的安全。", cantonese: "廣東話口語常講「攔住」或「截住」，書面語用「截」。" },
+      { id: 2, word: "城鎮", meaning: "人口集中，有商店、房屋的地方，規模比城市小。", example: "這座寧靜的城鎮，每到假日都會有許多遊客到來。", cantonese: "廣東話與普通話用法相同。" },
+      { id: 3, word: "繁榮", meaning: "商業興旺，人來人往，十分熱鬧。", example: "大街上商店林立，人來人往，顯得十分繁榮。", cantonese: "廣東話口語亦常用「好旺」，作文書面語寫「繁榮」。" },
+      { id: 4, word: "豎", meaning: "垂直向上；直着立，與「橫」相反。", example: "同學把竹竿豎起來，搭建臨時的帳篷。", cantonese: "廣東話口語常用「直擺」或「立起」，書面語寫「豎」。" },
+      { id: 5, word: "橫", meaning: "向左右伸展，水平擺放，與「豎」相反。", example: "請不要把桌椅橫放在通道，阻礙其他人通行。", cantonese: "廣東話口語講「橫放」或「橫擺」。" },
+      { id: 6, word: "寬", meaning: "闊，兩邊之間的距離大。", example: "這條馬路十分寬，可以容納很多車輛同時行駛。", cantonese: "廣東話口語多講「闊」，作文書面語要寫「寬」。" },
+      { id: 7, word: "比畫", meaning: "用手的動作，模擬出物體的形狀或者示意。", example: "弟弟一邊比畫，一邊向我講述遊玩的經過。", cantonese: "廣東話口語講「比手劃腳」，書面語可用「比畫」。" },
+      { id: 8, word: "汗流浹背", meaning: "出很多汗，汗水浸濕了背脊，形容天氣熱或勞累。", example: "跑完長跑後，我汗流浹背，需要休息一會。", cantonese: "廣東話口語講「流到成身汗」，成語書面語寫「汗流浹背」。" },
+      { id: 9, word: "買賣", meaning: "交換貨物；做生意。", example: "市集裡的買賣十分熱鬧，到處都是顧客和攤主。", cantonese: "廣東話口語會說「做生意」或「買賣」。" },
+      { id: 10, word: "撐", meaning: "用物件抵住、支撐；亦指頂住壓力。", example: "我們用木棍撐住木板，防止它倒下。", cantonese: "廣東話口語會說「頂住」，書面語寫「撐」。" },
+      { id: 11, word: "無計可施", meaning: "想盡所有方法，都想不到解決辦法。", example: "面對頑皮的小貓，我一時間無計可施。", cantonese: "廣東話口語講「冇晒辦法」，注意作文要寫成「無計可施」。" },
+      { id: 12, word: "苦惱", meaning: "心中煩悶、憂愁，為事情感到困擾。", example: "他為這道艱深的數學題感到苦惱。", cantonese: "廣東話口語講「好煩」或「困擾」，書面語用「苦惱」。" },
+      { id: 13, word: "愁眉苦臉", meaning: "皺着眉頭，面上滿是憂愁的樣子。", example: "小明丟失了圖書，一整天都愁眉苦臉。", cantonese: "廣東話口語講「苦瓜咁嘅面」，成語書面語寫「愁眉苦臉」。" },
+      { id: 14, word: "毫不考慮", meaning: "完全不需要思索，立刻做出決定。", example: "聽見有人需要幫忙，他毫不考慮立刻上前協助。", cantonese: "廣東話口語講「諗都唔諗」，作文書面語寫「毫不考慮」。" },
+      { id: 15, word: "鋸", meaning: "使用鋸子切開木頭等物件；亦指鋸子工具。", example: "木匠用鋸把木頭切成合適的長度。", cantonese: "廣東話口語與書面語均可用「鋸」。" },
+      { id: 16, word: "用途", meaning: "一樣東西可以用來做什麼，功用。", example: "老師向我們講解各種工具的用途。", cantonese: "廣東話與普通話用法一致。" },
+      { id: 17, word: "考慮", meaning: "思考、斟酌，以作出決定。", example: "經過仔細考慮後，我決定報名參加朗誦比賽。", cantonese: "廣東話口語常講「諗吓」，書面語寫「考慮」。" }
+    ];
+
+    // 17 道選擇題數據
+    const mcQuestions = [
+      { q: "1. 警員迅速上前_______住了闖紅燈的行人，防止意外發生。", options: ["A. 截", "B. 豎", "C. 撐"], ans: "A", exp: "「截」指阻擋使人停止前進。" },
+      { q: "2. 這座小_______人口不多，環境十分優美寧靜。", options: ["A. 繁榮", "B. 城鎮", "C. 用途"], ans: "B", exp: "「城鎮」指規模比城市小的人口集中地。" },
+      { q: "3. 節日期間，商業街燈火通明，顯得非常_______。", options: ["A. 苦惱", "B. 繁榮", "C. 寬"], ans: "B", exp: "「繁榮」指商業興旺、人來人往。" },
+      { q: "4. 升旗手把旗桿高高地_______立在操場中央。", options: ["A. 橫", "B. 豎", "C. 鋸"], ans: "B", exp: "「豎」指垂直向上、直立。" },
+      { q: "5. 請把這張告示卡_______着貼在牆壁上。", options: ["A. 豎", "B. 橫", "C. 截"], ans: "B", exp: "「橫」指水平擺放、向左右伸展。" },
+      { q: "6. 這條馬路十分_______，足以讓四輛汽車並排駛過。", options: ["A. 寬", "B. 苦惱", "C. 橫"], ans: "A", exp: "「寬」指兩邊距離大、闊。" },
+      { q: "7. 妹妹手舞足蹈，邊說邊_______着話中的情景。", options: ["A. 買賣", "B. 比畫", "C. 毫不考慮"], ans: "B", exp: "「比畫」指用手勢動作模擬或示意。" },
+      { q: "8. 在烈日下進行體育訓練後，運動員們都_______。", options: ["A. 愁眉苦臉", "B. 汗流浹背", "C. 無計可施"], ans: "B", exp: "「汗流浹背」形容出汗極多、浸濕背脊。" },
+      { q: "9. 集市上有許多攤檔，進行着各式各樣的雜貨_______。", options: ["A. 買賣", "B. 用途", "C. 比畫"], ans: "A", exp: "「買賣」指交換貨物或做生意。" },
+      { q: "10. 風很大，志明用雙手用力_______住雨傘以免被吹飛。", options: ["A. 鋸", "B. 撐", "C. 截"], ans: "B", exp: "「撐」指抵住或支撐。" },
+      { q: "11. 水管漏水越來越嚴重，我們一時間_______，十分著急。", options: ["A. 毫不考慮", "B. 無計可施", "C. 汗流浹背"], ans: "B", exp: "「無計可施」指想不出解決辦法。" },
+      { q: "12. 哥哥正在為明天難度很高的測驗感到很_______。", options: ["A. 繁榮", "B. 苦惱", "C. 寬"], ans: "B", exp: "「苦惱」指心中煩悶憂愁。" },
+      { q: "13. 看見破裂的玩具，弟弟整天都_______，十分難過。", options: ["A. 愁眉苦臉", "B. 汗流浹背", "C. 毫不考慮"], ans: "A", exp: "「愁眉苦臉」指滿面憂愁的樣子。" },
+      { q: "14. 看見有人在路上跌倒，路人_______便上前扶起他。", options: ["A. 無計可施", "B. 毫不考慮", "C. 愁眉苦臉"], ans: "B", exp: "「毫不考慮」指不需思索立刻決定。" },
+      { q: "15. 木匠師傅正拿著工具把廢棄木箱_______成兩半。", options: ["A. 撐", "B. 鋸", "C. 截"], ans: "B", exp: "「鋸」指用鋸子切開物體。" },
+      { q: "16. 這款多功能文具盒有多種實用的_______。", options: ["A. 用途", "B. 城鎮", "C. 買賣"], ans: "A", exp: "「用途」指功用或用處。" },
+      { q: "17. 作出決定前，我們要仔細_______各方面的因素。", options: ["A. 考慮", "B. 比畫", "C. 苦惱"], ans: "A", exp: "「考慮」指思索斟酌以作決定。" }
+    ];
+
+    // 17 道填充題數據
+    const fillQuestions = [
+      { id: 1, text: "警察上前【 】住衝出馬路的小朋友，保障他的安全。", ans: "截" },
+      { id: 2, text: "這座寧靜的【 】，每到假日都會有許多遊客到來。", ans: "城鎮" },
+      { id: 3, text: "大街上商店林立，人來人往，顯得十分【 】。", ans: "繁榮" },
+      { id: 4, text: "同學把竹竿【 】起來，搭建臨時的帳篷。", ans: "豎" },
+      { id: 5, text: "請不要把桌椅【 】放在通道，阻礙其他人通行。", ans: "橫" },
+      { id: 6, text: "這條馬路十分【 】，可以容納很多車輛同時行駛。", ans: "寬" },
+      { id: 7, text: "弟弟一邊【 】，一邊向我講述遊玩的經過。", ans: "比畫" },
+      { id: 8, text: "跑完長跑後，我【 】，需要休息一會。", ans: "汗流浹背" },
+      { id: 9, text: "市集裡的【 】十分熱鬧，到處都是顧客和攤主。", ans: "買賣" },
+      { id: 10, text: "我們用木棍【 】住木板，防止它倒下。", ans: "撐" },
+      { id: 11, text: "面對頑皮的小貓，我一時間【 】。", ans: "無計可施" },
+      { id: 12, text: "他為這道艱深的數學題感到【 】。", ans: "苦惱" },
+      { id: 13, text: "小明丟失了圖書，一整天都【 】。", ans: "愁眉苦臉" },
+      { id: 14, text: "聽見有人需要幫忙，他【 】立刻上前協助。", ans: "毫不考慮" },
+      { id: 15, text: "木匠用【 】把木頭切成合適的長度。", ans: "鋸" },
+      { id: 16, text: "老師向我們講解各種工具的【 】。", ans: "用途" },
+      { id: 17, text: "經過慎重【 】，姐姐決定報名參加寫作比賽。", ans: "考慮" }
+    ];
+
+    // 初始化頁面數據
+    function init() {
+      // 渲染第一頁
+      const wordsContainer = document.getElementById('words-list');
+      vocabularyData.forEach(item => {
+        wordsContainer.innerHTML += `
+          <div class="card">
+            <div class="word-title">
+              <span>${item.id}. ${item.word}</span>
+              <button class="audio-btn" onclick="speakCantonese('${item.word}。${item.example}')">🔊 粵語朗讀</button>
+            </div>
+            <p><strong>釋義：</strong>${item.meaning}</p>
+            <p><strong>例句：</strong>${item.example}</p>
+            <div class="cantonese-tip">💡 <strong>粵普分別：</strong>${item.cantonese}</div>
+          </div>
+        `;
+      });
+
+      // 渲染第二頁
+      const mcContainer = document.getElementById('mc-list');
+      mcQuestions.forEach((item, index) => {
+        let optsHtml = item.options.map(opt => {
+          let letter = opt.charAt(0);
+          let isCorrect = letter === item.ans;
+          return `<button class="option-btn" onclick="checkMC(this, ${index}, ${isCorrect}, '${item.exp}')">${opt}</button>`;
+        }).join('');
+
+        mcContainer.innerHTML += `
+          <div class="card">
+            <p><strong>${item.q}</strong></p>
+            ${optsHtml}
+            <div class="feedback"></div>
+          </div>
+        `;
+      });
+
+      // 渲染第三頁
+      const fillContainer = document.getElementById('fill-list');
+      fillQuestions.forEach((item, index) => {
+        let parts = item.text.split("【 】");
+        fillContainer.innerHTML += `
+          <div class="card">
+            <p>${item.id}. ${parts[0]} <input type="text" id="fill-in-${item.id}" class="fill-blank-input"> ${parts[1]}</p>
+            <button class="submit-btn" onclick="checkFill(${index}, ${item.id}, '${item.ans}')">核對答案</button>
+            <div id="fill-fb-${item.id}" class="feedback"></div>
+          </div>
+        `;
+      });
+    }
+
+    // 頁面切換
+    function switchPage(pageNum) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('page' + pageNum).classList.add('active');
+      document.querySelectorAll('.nav-btn')[pageNum - 1].classList.add('active');
+
+      if (pageNum === 4) {
+        updateSummary();
+      }
+    }
+
+    // 粵語發音功能
+    function speakCantonese(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-HK';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert("你的瀏覽器暫時不支援語音發音。");
+      }
+    }
+
+    // 選擇題檢查與計分
+    function checkMC(btn, qIndex, isCorrect, exp) {
+      const card = btn.parentElement;
+      const buttons = card.querySelectorAll('.option-btn');
+      const fb = card.querySelector('.feedback');
+
+      buttons.forEach(b => b.className = 'option-btn');
+
+      if (isCorrect) {
+        btn.classList.add('selected-correct');
+        fb.className = "feedback correct";
+        fb.innerText = "🎉 答對了！" + exp;
+        mcScores[qIndex] = 1;
+      } else {
+        btn.classList.add('selected-incorrect');
+        fb.className = "feedback incorrect";
+        fb.innerText = "❌ 再想想看！提示：" + exp;
+        mcScores[qIndex] = 0;
+      }
+
+      updateMCScoreDisplay();
+    }
+
+    function updateMCScoreDisplay() {
+      const totalMC = mcScores.reduce((a, b) => a + b, 0);
+      document.getElementById('mc-score-display').innerText = `${totalMC} / 17 分`;
+    }
+
+    // 填充題檢查與計分
+    function checkFill(qIndex, id, correctAns) {
+      const userAns = document.getElementById('fill-in-' + id).value.trim();
+      const fb = document.getElementById('fill-fb-' + id);
+
+      if (userAns === correctAns) {
+        fb.className = "feedback correct";
+        fb.innerText = "🎉 完全正確！太棒了！";
+        fillScores[qIndex] = 1;
+      } else {
+        fb.className = "feedback incorrect";
+        fb.innerText = `❌ 再試試看！正確答案是「${correctAns}」。`;
+        fillScores[qIndex] = 0;
+      }
+
+      updateFillScoreDisplay();
+    }
+
+    function updateFillScoreDisplay() {
+      const totalFill = fillScores.reduce((a, b) => a + b, 0);
+      document.getElementById('fill-score-display').innerText = `${totalFill} / 17 分`;
+    }
+
+    // 更新第四頁總總結
+    function updateSummary() {
+      const mcTotal = mcScores.reduce((a, b) => a + b, 0);
+      const fillTotal = fillScores.reduce((a, b) => a + b, 0);
+      const grandTotal = mcTotal + fillTotal;
+
+      document.getElementById('summary-mc-score').innerText = `${mcTotal} / 17 分`;
+      document.getElementById('summary-fill-score').innerText = `${fillTotal} / 17 分`;
+      document.getElementById('summary-total-score').innerText = `${grandTotal} / 34 分`;
+
+      const praiseBox = document.getElementById('praise-message');
+      if (grandTotal === 34) {
+        praiseBox.innerText = "🌟 完美滿分！你是無敵的中文詞彙大師！飛向宇宙，浩瀚無垠！ 🚀";
+      } else if (grandTotal >= 28) {
+        praiseBox.innerText = "🎉 非常出色！你已經掌握了大部分詞語，繼續保持！ 💪";
+      } else if (grandTotal >= 17) {
+        praiseBox.innerText = "👍 表現不錯！試試回去頁面一多複習一下錯題吧！ ✨";
+      } else {
+        praiseBox.innerText = "加油！多練習幾次，你一定能拿到更高分！ 🤠";
+      }
+    }
+
+    // 重設測驗
+    function resetQuiz() {
+      if (confirm("確定要重新開始練習嗎？所有得分將會清空。")) {
+        mcScores.fill(0);
+        fillScores.fill(0);
+
+        updateMCScoreDisplay();
+        updateFillScoreDisplay();
+
+        // 清除選擇題狀態
+        document.querySelectorAll('.option-btn').forEach(b => b.className = 'option-btn');
+        document.querySelectorAll('.feedback').forEach(f => f.innerText = '');
+
+        // 清除填充題輸入框
+        document.querySelectorAll('.fill-blank-input').forEach(input => input.value = '');
+
+        switchPage(1);
+      }
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
