@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>四年級中文詞彙大冒險（黃棕冒險主題）</title>
+  <style>
+    :root {
+      --primary-brown: #5d4037;   /* Rich Warm Brown */
+      --secondary-brown: #8d6e63; /* Muted Accent Brown */
+      --bright-yellow: #ffca28;   /* Sunny Cartoon Yellow */
+      --bg-yellow: #fff8e1;       /* Light Warm Yellow Page Background */
+      --card-bg: #ffffff;
+      --text-dark: #3e2723;
+      --accent-orange: #f57c00;  /* Vibrant Button Accent */
+    }
+
+    body {
+      font-family: 'Comic Sans MS', 'Microsoft JhengHei', sans-serif;
+      background-color: var(--bg-yellow);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary-brown), #3e2723);
+      color: var(--bright-yellow);
+      padding: 18px 15px;
+      text-align: center;
+      border-bottom: 5px solid var(--bright-yellow);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    h1 { 
+      margin: 0 0 12px 0; 
+      font-size: 26px; 
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      background-color: var(--bright-yellow);
+      color: var(--primary-brown);
+      border: 2px solid var(--primary-brown);
+      padding: 10px 20px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+      transition: all 0.2s ease-in-out;
+    }
+
+    .nav-btn:hover { 
+      transform: scale(1.05); 
+      background-color: #ffb300;
+    }
+
+    .nav-btn.active { 
+      background-color: var(--accent-orange); 
+      color: white; 
+      border-color: #e65100;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 10px rgba(93, 64, 55, 0.1);
+      border: 3px solid #ffe082;
+    }
+
+    .word-title {
+      color: var(--primary-brown);
+      font-size: 21px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px dashed #ffe082;
+      padding-bottom: 8px;
+    }
+
+    .audio-btn {
+      background-color: #795548;
+      color: #fff8e1;
+      border: 2px solid #5d4037;
+      padding: 6px 14px;
+      border-radius: 15px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+
+    .audio-btn:hover { background-color: #4e342e; }
+
+    .cantonese-tip {
+      background-color: #fff3e0;
+      border-left: 4px solid var(--accent-orange);
+      padding: 8px 12px;
+      margin-top: 10px;
+      font-size: 14px;
+      border-radius: 0 8px 8px 0;
+      color: #4e342e;
+    }
+
+    .option-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: #fffde7;
+      border: 2px solid #ffe082;
+      color: var(--text-dark);
+      padding: 10px 15px;
+      margin: 8px 0;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .option-btn:hover { background: #fff59d; }
+
+    .feedback { font-weight: bold; margin-top: 10px; }
+    .correct { color: #2e7d32; }
+    .incorrect { color: #c62828; }
+
+    .fill-blank-input {
+      font-size: 16px;
+      padding: 4px 8px;
+      border: 2px solid var(--primary-brown);
+      background-color: #fffde7;
+      border-radius: 5px;
+      width: 130px;
+      text-align: center;
+    }
+
+    .submit-btn {
+      background-color: var(--primary-brown);
+      color: var(--bright-yellow);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .submit-btn:hover { background-color: #3e2723; }
+
+    .word-bank {
+      background: #fff3e0;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      font-weight: bold;
+      line-height: 1.6;
+      color: var(--primary-brown);
+      border: 2px dashed var(--accent-orange);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🦁 小學四年級中文詞彙黃金大冒險！ 🐾</h1>
+    <div class="nav-buttons">
+      <button class="nav-btn active" onclick="switchPage(1)">頁面一：17個詞義與例句</button>
+      <button class="nav-btn" onclick="switchPage(2)">頁面二：17道多項選擇題</button>
+      <button class="nav-btn" onclick="switchPage(3)">頁面三：17道填充題</button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- 頁面一：17 個詞義、例句與粵普分別 -->
+    <div id="page1" class="page active">
+      <h2>📚 第一頁：17 個詞義學習與粵普對照</h2>
+      <p>點擊「🔊 粵語朗讀」即可聽到標準廣東話發音，並學習粵語與普通話的分別！</p>
+      <div id="words-list"></div>
+    </div>
+
+    <!-- 頁面二：17 道選擇題 -->
+    <div id="page2" class="page">
+      <h2>🎯 第二頁：17 道多項選擇題</h2>
+      <div id="mc-list"></div>
+    </div>
+
+    <!-- 頁面三：17 道填充題 -->
+    <div id="page3" class="page">
+      <h2>✏️ 第三頁：17 道填充題大挑戰</h2>
+      <div class="word-bank">
+        📌 參考詞庫：[ 門鈴 | 梯子 | 野豬 | 長頸鹿 | 距離 | 敲 | 安裝 | 省事 | 麻煩 | 路途 | 遙遠 | 咚 | 無話可說 | 扛 | 剛好 | 響 | 壞 ]
+      </div>
+      <div id="fill-list"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // 17 個全新詞語數據
+    const vocabularyData = [
+      { id: 1, word: "門鈴", meaning: "安裝在門外，按下就會發出響聲，通知屋內有人到訪的裝置。", example: "門鈴響起，原來是好朋友上門找我玩耍。", cantonese: "廣東話口語常講「撳門鐘」，書面語要寫「按門鈴」。" },
+      { id: 2, word: "梯子", meaning: "有一級級橫木，用來登高上下的工具。", example: "爸爸搬來梯子，準備修理天花板上的燈。", cantonese: "粵語口語常講「梯」，書面語寫作「梯子」。" },
+      { id: 3, word: "野豬", meaning: "生活在野外的豬，長有尖牙，性情較兇猛。", example: "我們行山時要小心，不要隨便靠近野豬。", cantonese: "廣東話與普通話詞彙相同。" },
+      { id: 4, word: "長頸鹿", meaning: "一種非洲動物，擁有十分修長的脖子，能夠吃到高處樹葉。", example: "長頸鹿憑著長長的脖子，吃到樹頂的嫩葉。", cantonese: "廣東話口語多叫「長頸鹿」，脖子在粵語叫「頸」。" },
+      { id: 5, word: "距離", meaning: "兩樣事物中間相隔的長度。", example: "我家和公園的距離不遠，步行只需十分鐘。", cantonese: "廣東話與普通話用法一致。" },
+      { id: 6, word: "敲", meaning: "用物件撞擊另一樣東西，令它發出聲響。", example: "來客輕輕敲門，等待屋內的人開門。", cantonese: "廣東話口語常講「叩門」或「拍門」，書面語統一寫「敲門」。" },
+      { id: 7, word: "安裝", meaning: "把零件、設備組合好，擺放妥當並投入使用。", example: "師傅上門安裝新的門鈴，很快便完成。", cantonese: "廣東話口語亦常講「裝」。" },
+      { id: 8, word: "省事", meaning: "減少工序，方便快捷，不用花費太多功夫。", example: "網上訂購食材送貨上門，十分省事。", cantonese: "廣東話口語會講「省功夫」或「方便」。" },
+      { id: 9, word: "麻煩", meaning: "費時費力；亦指令人感到棘手的事情。", example: "遇到不懂的問題，不用害怕麻煩老師。", cantonese: "廣東話口語講「煩」、「麻煩」，書面語寫「麻煩」。" },
+      { id: 10, word: "路途", meaning: "前往目的地所要走的道路。", example: "我們一早出發，避免路途遇上塞車。", cantonese: "廣東話口語講「路程」，書面語可用「路途」。" },
+      { id: 11, word: "遙遠", meaning: "相隔很遠，距離十分長。", example: "極地十分遙遠，很少人可以親身到訪。", cantonese: "廣東話口語講「好遠」，作文書面語用「遙遠」。" },
+      { id: 12, word: "咚", meaning: "擬聲詞，形容重物撞擊發出低沉的響聲。", example: "咚！書本重重掉在地上，嚇了我一跳。", cantonese: "廣東話常配合擬聲詞如「咚一聲」。" },
+      { id: 13, word: "無話可說", meaning: "沒有任何話可以講；可以指認同，亦可以指感到無奈。", example: "聽到他無理的解釋，我簡直無話可說。", cantonese: "廣東話口語講「冇話可說」或「無言以對」，注意「冇」要寫成「無」。" },
+      { id: 14, word: "扛", meaning: "把物件放在肩膀上承托、搬運。", example: "叔叔扛起大箱子，一步步走上樓梯。", cantonese: "廣東話口語常用「擔」或「抬」，書面語用「扛」。" },
+      { id: 15, word: "剛好", meaning: "不多不少，正合適；恰巧遇上。", example: "我抵達車站時，巴士剛好開到。", cantonese: "廣東話口語常講「剛剛好」或「巧合」，書面語寫「剛好」。" },
+      { id: 16, word: "響", meaning: "發出聲音；聲音傳播出來。", example: "上課鐘聲響，同學們趕快返回課室。", cantonese: "廣東話口語講「響起來」或「發聲」。" },
+      { id: 17, word: "壞", meaning: "物品損毀，不能正常使用；亦指品性不佳。", example: "我的手錶壞了，需要拿去維修。", cantonese: "廣東話口語講「爛咗」或「壞咗」，書面語寫「壞了」。" }
+    ];
+
+    // 17 道選擇題數據
+    const mcQuestions = [
+      { q: "1. 訪客按下門外的_______，屋內傳來叮咚聲。", options: ["A. 門鈴", "B. 梯子", "C. 距離"], ans: "A", exp: "「門鈴」是按了會響的門外裝置。" },
+      { q: "2. 爸爸搬來木_______，準備爬上去更換天花板的燈泡。", options: ["A. 門鈴", "B. 梯子", "C. 路途"], ans: "B", exp: "「梯子」是用來登高的工具。" },
+      { q: "3. 山林裡的_______長有尖牙，性情較兇猛，切勿靠近。", options: ["A. 野豬", "B. 長頸鹿", "C. 門鈴"], ans: "A", exp: "「野豬」是野生且性情較兇猛的動物。" },
+      { q: "4. 高大的_______憑着長脖子，輕鬆吃到樹頂的葉子。", options: ["A. 野豬", "B. 長頸鹿", "C. 梯子"], ans: "B", exp: "「長頸鹿」擁有長脖子。" },
+      { q: "5. 家中到學校的_______很近，步行只需五分鐘。", options: ["A. 距離", "B. 路途", "C. 遙遠"], ans: "A", exp: "「距離」指兩地中間相隔的長度。" },
+      { q: "6. 客人來到門前，禮貌地輕輕_______門。", options: ["A. 扛", "B. 敲", "C. 響"], ans: "B", exp: "敲門指用手或物撞擊門發出聲音。" },
+      { q: "7. 技師上門為我們_______全新的冷氣機。", options: ["A. 安裝", "B. 省事", "C. 麻煩"], ans: "A", exp: "「安裝」指組合並設置好設備。" },
+      { q: "8. 採用自動掃地機器人清理房間，真的非常_______。", options: ["A. 麻煩", "B. 省事", "C. 遙遠"], ans: "B", exp: "「省事」指節省功夫、方便快捷。" },
+      { q: "9. 解解答這道數學題程序繁複，非常_______。", options: ["A. 省事", "B. 剛好", "C. 麻煩"], ans: "C", exp: "「麻煩」指費時費力、棘手。" },
+      { q: "10. 我們一早出發，希望_______順利，不會遇到塞車。", options: ["A. 路途", "B. 距離", "C. 遙遠"], ans: "A", exp: "「路途」指前往目的地所走的路程。" },
+      { q: "11. 星星距離我們極為_______，需要用望遠鏡才看得清楚。", options: ["A. 剛好", "B. 遙遠", "C. 龐大"], ans: "B", exp: "「遙遠」指距離非常遠。" },
+      { q: "12. 突然「_______」的一聲，重物掉落地上發出低沉聲響。", options: ["A. 咚", "B. 響", "C. 敲"], ans: "A", exp: "「咚」是形容重物撞擊的擬聲詞。" },
+      { q: "13. 對於他故意說謊的行為，大家感到極度失望，頓時_______。", options: ["A. 從容不迫", "B. 無話可說", "C. 威風凜凜"], ans: "B", exp: "「無話可說」指無奈或沒有話講。" },
+      { q: "14. 工人叔叔把重重的水泥袋_______在肩膀上走上樓。", options: ["A. 敲", "B. 扛", "C. 安裝"], ans: "B", exp: "「扛」是用肩膀承托搬運。" },
+      { q: "15. 我剛到達巴士站，巴士_______開過來，非常幸運。", options: ["A. 剛好", "B. 依舊", "C. 省事"], ans: "A", exp: "「剛好」指恰巧遇上。" },
+      { q: "16. 消防下課鬧鐘突然大_______，同學們迅速有序排隊。", options: ["A. 敲", "B. 響", "C. 壞"], ans: "B", exp: "「響」指發出聲音。" },
+      { q: "17. 電視機突然故障壞了，無法發出聲音。", options: ["A. 壞", "B. 響", "C. 敲"], ans: "A", exp: "「壞」指物品損毀無法運作。" }
+    ];
+
+    // 17 道填充題數據
+    const fillQuestions = [
+      { id: 1, text: "【 】響起，原來是好朋友上門找我玩耍。", ans: "門鈴" },
+      { id: 2, text: "爸爸搬來【 】，準備修理天花板上的燈。", ans: "梯子" },
+      { id: 3, text: "我們行山時要小心，不要隨便靠近【 】。", ans: "野豬" },
+      { id: 4, text: "【 】憑著長長的脖子，吃到樹頂的嫩葉。", ans: "長頸鹿" },
+      { id: 5, text: "我家和公園的【 】不遠，步行只需十分鐘。", ans: "距離" },
+      { id: 6, text: "來客輕輕【 】門，等待屋內的人開門。", ans: "敲" },
+      { id: 7, text: "師傅上門【 】新的門鈴，很快便完成。", ans: "安裝" },
+      { id: 8, text: "網上訂購食材送貨上門，十分【 】。", ans: "省事" },
+      { id: 9, text: "遇到不懂的問題，不用害怕【 】老師。", ans: "麻煩" },
+      { id: 10, text: "我們一早出發，避免【 】遇上塞車。", ans: "路途" },
+      { id: 11, text: "極地十分【 】，很少人可以親身到訪。", ans: "遙遠" },
+      { id: 12, text: "【 】！書本重重掉在地上，嚇了我一跳。", ans: "咚" },
+      { id: 13, text: "聽到他無理的解釋，我簡直【 】。", ans: "無話可說" },
+      { id: 14, text: "叔叔【 】起大箱子，一步步走上樓梯。", ans: "扛" },
+      { id: 15, text: "我抵達車站時，巴士【 】開到。", ans: "剛好" },
+      { id: 16, text: "上課鐘聲【 】，同學們趕快返回課室。", ans: "響" },
+      { id: 17, text: "我的手錶【 】了，需要拿去維修。", ans: "壞" }
+    ];
+
+    // 初始化頁面數據
+    function init() {
+      // 渲染第一頁
+      const wordsContainer = document.getElementById('words-list');
+      vocabularyData.forEach(item => {
+        wordsContainer.innerHTML += `
+          <div class="card">
+            <div class="word-title">
+              <span>${item.id}. ${item.word}</span>
+              <button class="audio-btn" onclick="speakCantonese('${item.word}。${item.example}')">🔊 粵語朗讀</button>
+            </div>
+            <p><strong>釋義：</strong>${item.meaning}</p>
+            <p><strong>例句：</strong>${item.example}</p>
+            <div class="cantonese-tip">💡 <strong>粵普分別：</strong>${item.cantonese}</div>
+          </div>
+        `;
+      });
+
+      // 渲染第二頁
+      const mcContainer = document.getElementById('mc-list');
+      mcQuestions.forEach((item) => {
+        let optsHtml = item.options.map(opt => {
+          let letter = opt.charAt(0);
+          let isCorrect = letter === item.ans;
+          return `<button class="option-btn" onclick="checkMC(this, ${isCorrect}, '${item.exp}')">${opt}</button>`;
+        }).join('');
+
+        mcContainer.innerHTML += `
+          <div class="card">
+            <p><strong>${item.q}</strong></p>
+            ${optsHtml}
+            <div class="feedback"></div>
+          </div>
+        `;
+      });
+
+      // 渲染第三頁
+      const fillContainer = document.getElementById('fill-list');
+      fillQuestions.forEach(item => {
+        let parts = item.text.split("【 】");
+        fillContainer.innerHTML += `
+          <div class="card">
+            <p>${item.id}. ${parts[0]} <input type="text" id="fill-in-${item.id}" class="fill-blank-input"> ${parts[1]}</p>
+            <button class="submit-btn" onclick="checkFill(${item.id}, '${item.ans}')">核對答案</button>
+            <div id="fill-fb-${item.id}" class="feedback"></div>
+          </div>
+        `;
+      });
+    }
+
+    // 頁面切換
+    function switchPage(pageNum) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('page' + pageNum).classList.add('active');
+      document.querySelectorAll('.nav-btn')[pageNum - 1].classList.add('active');
+    }
+
+    // 粵語發音功能
+    function speakCantonese(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-HK';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert("你的瀏覽器暫時不支援語音發音。");
+      }
+    }
+
+    // 選擇題檢查
+    function checkMC(btn, isCorrect, exp) {
+      const card = btn.parentElement;
+      const fb = card.querySelector('.feedback');
+      if (isCorrect) {
+        fb.className = "feedback correct";
+        fb.innerText = "🎉 答對了！" + exp;
+      } else {
+        fb.className = "feedback incorrect";
+        fb.innerText = "❌ 再想想看！提示：" + exp;
+      }
+    }
+
+    // 填充題檢查
+    function checkFill(id, correctAns) {
+      const userAns = document.getElementById('fill-in-' + id).value.trim();
+      const fb = document.getElementById('fill-fb-' + id);
+      if (userAns === correctAns) {
+        fb.className = "feedback correct";
+        fb.innerText = "🎉 完全正確！太棒了！";
+      } else {
+        fb.className = "feedback incorrect";
+        fb.innerText = `❌ 再試試看！正確答案是「${correctAns}」。`;
+      }
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
