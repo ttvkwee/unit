@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍰 卡通甜品王國：詞語學習寶典 🍩</title>
+    <style>
+        :root {
+            --bg-color: #FFF5E6;
+            --main-card-bg: #FFFFFF;
+            --primary-color: #FF8C42;
+            --secondary-color: #FFD166;
+            --accent-color: #06D6A0;
+            --text-color: #4A3E3D;
+            --pink-accent: #FFB3C6;
+            --canto-color: #8E44AD;
+            --sound-btn-bg: #E1F5FE;
+            --sound-btn-border: #03A9F4;
+            --font-family: 'Segoe UI', "Microsoft JhengHei", "PingFang HK", sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#FFD166 15%, transparent 16%), radial-gradient(#FFB3C6 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 4px solid var(--secondary-color);
+            padding: 25px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin: 10px 0;
+            text-shadow: 2px 2px 0px #FFE5D9;
+        }
+
+        /* 導覽按鈕 (Tab Navigation) */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            background-color: #FFF0F5;
+            border: 2px solid var(--pink-accent);
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 var(--pink-accent);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            background-color: var(--secondary-color);
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 0 #D96B27;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 卡片與題目樣式 */
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .word-card {
+            background: #FFF9F2;
+            border: 2px solid #FFE0B2;
+            border-radius: 16px;
+            padding: 18px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .word-card h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            border-bottom: 2px dashed var(--secondary-color);
+            padding-bottom: 5px;
+        }
+
+        .word-card p {
+            margin: 8px 0;
+            line-height: 1.5;
+            font-size: 0.98rem;
+        }
+
+        /* 按鈕系統 */
+        .action-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-sound {
+            background-color: var(--sound-btn-bg);
+            border: 2px solid var(--sound-btn-border);
+            color: #0277BD;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-sound:hover {
+            background-color: #B3E5FC;
+        }
+
+        .btn-canto-toggle {
+            background-color: #F3E5F5;
+            border: 2px solid #CE93D8;
+            color: var(--canto-color);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-canto-toggle:hover {
+            background-color: #E1BEE7;
+        }
+
+        .canto-box {
+            display: none;
+            background-color: #F8F0FB;
+            border-left: 4px solid var(--canto-color);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.92rem;
+            color: #4A148C;
+            animation: fadeIn 0.3s;
+        }
+
+        /* 題目樣式 */
+        .quiz-item {
+            background: #FAFAFA;
+            border: 2px solid #E0E0E0;
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-item p.question-text {
+            font-size: 1.15rem;
+            font-weight: bold;
+            margin-top: 0;
+            color: #333;
+        }
+
+        .options label {
+            display: block;
+            background: white;
+            border: 2px solid #E0E0E0;
+            padding: 10px 15px;
+            border-radius: 12px;
+            margin: 8px 0;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .options label:hover {
+            background: #FFF3E0;
+            border-color: var(--primary-color);
+        }
+
+        .fill-blank-input {
+            border: none;
+            border-bottom: 2px solid var(--primary-color);
+            background: #FFF8E1;
+            padding: 4px 8px;
+            font-size: 1rem;
+            text-align: center;
+            width: 140px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #D84315;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #02C39A;
+            margin-top: 20px;
+        }
+
+        .btn-submit:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #02C39A;
+        }
+
+        /* 得分頁面 */
+        .score-board {
+            text-align: center;
+            padding: 30px;
+            background: #FFF8E1;
+            border-radius: 20px;
+            border: 3px dashed var(--secondary-color);
+        }
+
+        .score-number {
+            font-size: 4rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .cake-badge {
+            font-size: 5rem;
+            margin: 15px 0;
+        }
+
+        .dialect-box {
+            background-color: #EBF5FB;
+            border-left: 5px solid #3498DB;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 0 12px 12px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .tab-btn { font-size: 0.9rem; padding: 8px 14px; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🧁 熊貓廚師嘅甜品詞語學習樂園 🍰</h1>
+        <p>多項選擇題依家都有「廣東話粵語輸出」與「語音朗讀」按鈕啦！</p>
+    </header>
+
+    <!-- 導覽頁面按鈕 -->
+    <nav class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('tab1')">📖 1. 詞義與例句</button>
+        <button class="tab-btn" onclick="switchTab('tab2')">🧩 2. 多項選擇題</button>
+        <button class="tab-btn" onclick="switchTab('tab3')">✍️ 3. 詞語填充題</button>
+        <button class="tab-btn" onclick="switchTab('tab4')">🏆 4. 成績結算</button>
+    </nav>
+
+    <!-- 頁面 1：Meaning & 例句 -->
+    <section id="tab1" class="tab-content active">
+        <div class="dialect-box">
+            💡 <strong>學習提示：</strong> 點擊 <strong>「🔊 廣東話語音朗讀」</strong> 按鈕聽發音；點擊 <strong>「📝 廣東話文字對照」</strong> 可以觀看粵語解釋與例句。
+        </div>
+
+        <div class="word-grid" id="word-list-container">
+            <!-- 由 JavaScript 動態生成 15 個詞語卡片與按鈕 -->
+        </div>
+    </section>
+
+    <!-- 頁面 2：多項選擇題 (附帶廣東話按鈕) -->
+    <section id="tab2" class="tab-content">
+        <h2>🧩 多項選擇題（請選出最正確的答案）</h2>
+        <div class="dialect-box">
+            💡 <strong>廣東話輔助：</strong> 唔明白題意？可以按題目下面嘅 <strong>「🗣️ 廣東話粵語題目說明」</strong> 按鈕，聽取或閱讀廣東話提示！
+        </div>
+        <form id="mc-form">
+            <!-- JavaScript 動態生成包含廣東話按鈕的 MC 題目 -->
+        </form>
+        <button type="button" class="btn-submit" onclick="switchTab('tab3')">完成選擇題，下一關！➡️</button>
+    </section>
+
+    <!-- 頁面 3：填充題 (適合三四年級) -->
+    <section id="tab3" class="tab-content">
+        <h2>✍️ 詞語填充題（請在空格內填入合適的詞語）</h2>
+        <div class="dialect-box">
+            💡 <strong>詞庫選擇：</strong> 滿足感、油然而生、一整天、辛勞、慶幸、輕易、網絡、驅使、食譜、模具、稀薄、拂打、大失所望、重新燃起、多番嘗試
+        </div>
+        <form id="fill-form">
+            <!-- JavaScript 生成填充題 -->
+        </form>
+        <button type="button" class="btn-submit" onclick="calculateFinalScore()">提交答案，計算總分！🎉</button>
+    </section>
+
+    <!-- 頁面 4：Marks Calculation 成績結算 -->
+    <section id="tab4" class="tab-content">
+        <div class="score-board">
+            <h2>🎉 學習成績大結算 🎉</h2>
+            <p>你喺甜品王國嘅挑戰成果如下：</p>
+            <div class="cake-badge" id="badge-icon">🧁</div>
+            <div class="score-number"><span id="total-score">0</span> / 100 分</div>
+            <p id="score-comment" style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color);"></p>
+            <p id="detail-feedback" style="text-align: left; background: #fff; padding: 15px; border-radius: 12px; margin-top: 20px;"></p>
+            <button class="btn-submit" onclick="switchTab('tab1')" style="background: var(--primary-color);">🔄 重新學習 / 再次挑戰</button>
+        </div>
+    </section>
+</div>
+
+<script>
+// 15個詞語完整資料庫
+const vocabulary = [
+    { 
+        word: "滿足感", 
+        meaning: "完成事情之後，心中感到開心、圓滿的感受。", 
+        sentence: "成功焗好蛋糕，一股滿足感湧上心頭。", 
+        cantoMeaning: "做好一件嘢之後，心入面覺得好開心、好有成就感。", 
+        cantoSentence: "終於整好個卡通蛋糕，成個人覺得超有滿足感！" 
+    },
+    { 
+        word: "油然而生", 
+        meaning: "感受自然而然地在心裡出現。", 
+        sentence: "看見美麗的風景，喜悅的感覺油然而生。", 
+        cantoMeaning: "某種感覺好自然咁喺心入面冒出嚟。", 
+        cantoSentence: "睇到咁靚嘅甜品，開心嘅感覺油然而生。" 
+    },
+    { 
+        word: "一整天", 
+        meaning: "由早上到夜晚，完整的一日時間。", 
+        sentence: "媽媽忙碌了一整天，十分疲倦。", 
+        cantoMeaning: "由朝早一直到夜晚，歸整一整日。", 
+        cantoSentence: "媽媽喺廚房忙咗一整天，真係好辛苦。" 
+    },
+    { 
+        word: "辛勞", 
+        meaning: "辛苦勞累，要付出很多體力或心力。", 
+        sentence: "農夫辛勞耕種，才有豐盛的收成。", 
+        cantoMeaning: "好辛苦咁工作，付出咗好多體力同心機。", 
+        cantoSentence: "多謝糕點師傅嘅辛勞，我哋先有咁好食嘅蛋糕。" 
+    },
+    { 
+        word: "慶幸", 
+        meaning: "覺得好彩，幸好事情沒有變得更差。", 
+        sentence: "我慶幸自己及時帶雨傘，沒有被大雨淋濕。", 
+        cantoMeaning: "覺得好彩、幸好冇發生壞事。", 
+        cantoSentence: "我好慶幸自己帶咗雨傘，如果唔係就淋到濕晒。" 
+    },
+    { 
+        word: "輕易", 
+        meaning: "唔使費很大力氣，好容易做到。", 
+        sentence: "不要輕易放棄自己定下的目標。", 
+        cantoMeaning: "隨隨便便、好容易，唔使點花力氣。", 
+        cantoSentence: "呢做甜品唔容易，千祈唔好輕易放棄呀！" 
+    },
+    { 
+        word: "網絡", 
+        meaning: "連接各個電子裝置的系統，可以傳送資訊。", 
+        sentence: "我們可以透過網絡尋找不同的資料。", 
+        cantoMeaning: "網際網絡，上網傳送資料嘅系統。", 
+        cantoSentence: "我哋可以透過網絡搵到好多好食嘅甜品食譜。" 
+    },
+    { 
+        word: "驅使", 
+        meaning: "被某種想法推動，因而去做某件事。", 
+        sentence: "好奇心驅使我不斷探索新事物。", 
+        cantoMeaning: "被某種想法或者好奇心推動你去行動。", 
+        cantoSentence: "在好奇心驅使之下，我試整咗一款新蛋糕。" 
+    },
+    { 
+        word: "食譜", 
+        meaning: "記載菜式材料、步驟，用來煮嘢食的指南。", 
+        sentence: "我依照網上的食譜嘗試製作曲奇。", 
+        cantoMeaning: "教人買乜材料、點樣煮嘢食嘅指南。", 
+        cantoSentence: "只要跟住食譜做，就唔怕整崩個蛋糕啦。" 
+    },
+    { 
+        word: "模具", 
+        meaning: "用來壓出固定形狀的工具。", 
+        sentence: "我利用模具造出星形的朱古力。", 
+        cantoMeaning: "用嚟印出某種特定形狀嘅模仔工具。", 
+        cantoSentence: "用呢個熊仔模具，就可以整出可愛嘅餅乾。" 
+    },
+    { 
+        word: "稀薄", 
+        meaning: "數量少、密度低，唔夠濃厚。", 
+        sentence: "高山上空氣比較稀薄，呼吸會較困難。", 
+        cantoMeaning: "數量好少、好稀，唔夠濃。", 
+        cantoSentence: "山頂嘅空氣好稀薄，行得太快會好喘氣。" 
+    },
+    { 
+        word: "拂打", 
+        meaning: "輕輕揮動、掃開物件。", 
+        sentence: "他揮動枝條，拂打開路邊的雜草。", 
+        cantoMeaning: "輕輕揮動手或者工具，將嘢掃開。", 
+        cantoSentence: "佢輕輕拂打衣袖上面嘅麵粉。" 
+    },
+    { 
+        word: "大失所望", 
+        meaning: "結果遠不及預期，感到非常失望。", 
+        sentence: "展覽提早結束，令我大失所望。", 
+        cantoMeaning: "結果同當初期望差好遠，覺得極度失望。", 
+        cantoSentence: "心愛嘅蛋糕店今日竟然冇開，真係令我大失所望。" 
+    },
+    { 
+        word: "重新燃起", 
+        meaning: "原本消失的信心、興趣再次出現。", 
+        sentence: "朋友的鼓勵令我重新燃起學習的信心。", 
+        cantoMeaning: "原本冇咗嘅信心或者熱情，再次起勁返。", 
+        cantoSentence: "聽完老師嘅鼓勵，我重新燃起做甜品嘅熱情。" 
+    },
+    { 
+        word: "多番嘗試", 
+        meaning: "一次又一次不斷試做。", 
+        sentence: "經過多番嘗試，我終於成功整好甜品。", 
+        cantoMeaning: "試完又試，試咗好多次。", 
+        cantoSentence: "經過多番嘗試，我終於成功焗出完美嘅戚風蛋糕！" 
+    }
+];
+
+// 多項選擇題 (附廣東話說明與口語題目)
+const mcQuestions = [
+    {
+        q: "1. 媽媽在廚房忙碌了____，為我們準備了豐富的晚餐。",
+        cantoQ: "題目解說：媽媽喺廚房由朝早忙到夜晚，應該填邊個詞語？",
+        options: ["一整天", "稀薄", "模具", "拂打"],
+        answer: "一整天"
+    },
+    {
+        q: "2. 哥哥用愛心形狀的____造出可愛的餅乾。",
+        cantoQ: "題目解說：哥哥用嚟印出愛心圖案形狀嘅工具叫咩？",
+        options: ["食譜", "模具", "網絡", "辛勞"],
+        answer: "模具"
+    },
+    {
+        q: "3. 「覺得好彩，幸好事情沒有變得更差」是指哪一個詞語？",
+        cantoQ: "題目解說：邊個詞語代表「覺得好彩、幸好冇發生壞事」嘅意思？",
+        options: ["慶幸", "驅使", "大失所望", "輕易"],
+        answer: "慶幸"
+    },
+    {
+        q: "4. 爬到幾千米高的山頂，空氣會變得怎樣？",
+        cantoQ: "題目解說：去到好高嘅山頂，空氣會變得好少好少，要用邊個詞語形容？",
+        options: ["稀薄", "油然而生", "滿足感", "重新燃起"],
+        answer: "稀薄"
+    },
+    {
+        q: "5. 太急躁做事往往會失敗，所以我們不要____聽信謠言。",
+        cantoQ: "題目解說：做人唔好咁隨隨便便、好容易就相信人，空格應該填咩？",
+        options: ["輕易", "辛勞", "多番嘗試", "食譜"],
+        answer: "輕易"
+    }
+];
+
+const fillQuestions = [
+    { q: "1. 經過（    ），小明終於學會了騎單車。", ans: "多番嘗試" },
+    { q: "2. 看見自己精心設計的甜品順利完成，我的心中充滿了（    ）。", ans: "滿足感" },
+    { q: "3. 這次考試成績不理想，但他沒有灰心，反而（    ）了鬥志。", ans: "重新燃起" },
+    { q: "4. 看到精美的蛋糕造型，大家對它的美味讚不絕口，佩服糕點師傅的（    ）。", ans: "辛勞" },
+    { q: "5. 原本預訂好的卡通蛋糕居然送錯了，令小壽星感到（    ）。", ans: "大失所望" }
+];
+
+window.onload = function() {
+    renderTab1();
+    renderTab2();
+    renderTab3();
+};
+
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(tabId).classList.add('active');
+    
+    const btnIndex = parseInt(tabId.replace('tab', '')) - 1;
+    document.querySelectorAll('.tab-btn')[btnIndex].classList.add('active');
+    
+    window.scrollTo(0, 0);
+}
+
+// 🔊 廣東話朗讀通用函數
+function speakText(text) {
+    if (!('speechSynthesis' in window)) {
+        alert("很抱歉，您的瀏覽器不支援語音朗讀功能。");
+        return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'zh-HK';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+}
+
+// 朗讀詞卡
+function speakCantoneseWord(index) {
+    const item = vocabulary[index];
+    speakText(`${item.word}。解釋：${item.meaning}。例句：${item.sentence}`);
+}
+
+// 朗讀選擇題
+function speakMcQuestion(index) {
+    const q = mcQuestions[index];
+    speakText(`${q.q}。選項包括：${q.options.join('，')}`);
+}
+
+// 渲染 Tab 1
+function renderTab1() {
+    const container = document.getElementById('word-list-container');
+    container.innerHTML = vocabulary.map((item, index) => `
+        <div class="word-card">
+            <div>
+                <h3>${index + 1}. ${item.word}</h3>
+                <p><strong>【解釋】：</strong>${item.meaning}</p>
+                <p><strong>【例句】：</strong>${item.sentence}</p>
+            </div>
+            <div class="action-btns">
+                <button type="button" class="btn-sound" onclick="speakCantoneseWord(${index})">
+                    🔊 廣東話語音朗讀 (Sound)
+                </button>
+                <button type="button" class="btn-canto-toggle" onclick="toggleCanto('canto-box-${index}')">
+                    📝 廣東話文字對照
+                </button>
+                <div class="canto-box" id="canto-box-${index}">
+                    <p style="margin: 4px 0;"><strong>【粵語解釋】：</strong>${item.cantoMeaning}</p>
+                    <p style="margin: 4px 0;"><strong>【粵語例句】：</strong>${item.cantoSentence}</p>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// 渲染 Tab 2 (包含廣東話按鈕的多項選擇題)
+function renderTab2() {
+    const form = document.getElementById('mc-form');
+    form.innerHTML = mcQuestions.map((q, idx) => `
+        <div class="quiz-item">
+            <p class="question-text">${q.q}</p>
+            <div class="options">
+                ${q.options.map(opt => `
+                    <label>
+                        <input type="radio" name="mc_${idx}" value="${opt}"> ${opt}
+                    </label>
+                `).join('')}
+            </div>
+            <div class="action-btns" style="margin-top: 12px;">
+                <button type="button" class="btn-canto-toggle" onclick="toggleCanto('mc-canto-${idx}')">
+                    🗣️ 廣東話粵語題目說明 (按此展開)
+                </button>
+                <button type="button" class="btn-sound" onclick="speakMcQuestion(${idx})">
+                    🔊 廣東話題目語音朗讀
+                </button>
+                <div class="canto-box" id="mc-canto-${idx}">
+                    <p style="margin: 4px 0;"><strong>💡 粵語題目提示：</strong>${q.cantoQ}</p>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// 渲染 Tab 3
+function renderTab3() {
+    const form = document.getElementById('fill-form');
+    form.innerHTML = fillQuestions.map((q, idx) => `
+        <div class="quiz-item">
+            <p>${q.q.replace('（    ）', `<input type="text" class="fill-blank-input" id="fill_${idx}" placeholder="請填寫">`)}</p>
+        </div>
+    `).join('');
+}
+
+// 切換廣東話對照顯示
+function toggleCanto(elementId) {
+    const box = document.getElementById(elementId);
+    if (box.style.display === "block") {
+        box.style.display = "none";
+    } else {
+        box.style.display = "block";
+    }
+}
+
+// 計算分數
+function calculateFinalScore() {
+    let score = 0;
+    let feedback = "<strong>📝 答題檢討：</strong><br>";
+
+    mcQuestions.forEach((q, idx) => {
+        const selected = document.querySelector(`input[name="mc_${idx}"]:checked`);
+        const userAns = selected ? selected.value : "未作答";
+        if (userAns === q.answer) {
+            score += 10;
+            feedback += `<span style="color:green;">✓ 選擇題 ${idx+1} 正確 (+10分)</span><br>`;
+        } else {
+            feedback += `<span style="color:red;">✗ 選擇題 ${idx+1} 錯誤（你選了：${userAns}，正確答案：${q.answer}）</span><br>`;
+        }
+    });
+
+    fillQuestions.forEach((q, idx) => {
+        const inputEl = document.getElementById(`fill_${idx}`);
+        const userAns = inputEl ? inputEl.value.trim() : "";
+        if (userAns === q.ans) {
+            score += 10;
+            feedback += `<span style="color:green;">✓ 填充題 ${idx+1} 正確 (+10分)</span><br>`;
+        } else {
+            feedback += `<span style="color:red;">✗ 填充題 ${idx+1} 錯誤（你填寫：${userAns || "空白"}，正確答案：${q.ans}）</span><br>`;
+        }
+    });
+
+    document.getElementById('total-score').innerText = score;
+    const commentEl = document.getElementById('score-comment');
+    const badgeEl = document.getElementById('badge-icon');
+
+    if (score === 100) {
+        badgeEl.innerText = "🎂 👑";
+        commentEl.innerText = "太厲害啦！你係最高榮譽嘅『甜品大師傅』！全部答對！";
+    } else if (score >= 80) {
+        badgeEl.innerText = "🍰";
+        commentEl.innerText = "好棒啊！獲得『高級糕點師』稱號，繼續努力！";
+    } else if (score >= 60) {
+        badgeEl.innerText = "🍩";
+        commentEl.innerText = "合格了！獲得『甜品學徒』獎牌，再溫習一下會更好！";
+    } else {
+        badgeEl.innerText = "🍪";
+        commentEl.innerText = "加油啊！返去『詞義與例句』頁面睇多幾次，重新挑戰啦！";
+    }
+
+    document.getElementById('detail-feedback').innerHTML = feedback;
+    switchTab('tab4');
+}
+</script>
+</body>
+</html>
