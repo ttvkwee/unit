@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作文輔助批改</title>
+    <style>
+        body{font-family: "Microsoft JhengHei", sans-serif;max-width:800px;margin:30px auto;padding:0 16px;}
+        textarea{width:100%;height:160px;padding:10px;font-size:16px;box-sizing:border-box;}
+        button{padding:10px 24px;font-size:16px;background:#2563eb;color:white;border:none;border-radius:6px;cursor:pointer;margin:12px 0;}
+        #result{white-space:pre-wrap;padding:16px;border:1px solid #ccc;border-radius:6px;min-height:120px;margin-top:10px;}
+    </style>
+</head>
+<body>
+    <h2>小學作文批改</h2>
+    <textarea id="article" placeholder="請貼上小朋友作文內容……"></textarea>
+    <br>
+    <button onclick="checkEssay()">開始批改</button>
+    <div id="result"></div>
+
+    <script>
+        // ⚠️ 將下面呢段替換成你自己嘅Worker網址
+        const PROXY_URL = "https://patient-brook-cb79.s240078.workers.dev/";
+
+        async function checkEssay(){
+            const text = document.getElementById("article").value.trim();
+            if(!text){
+                alert("請輸入作文！");
+                return;
+            }
+            const resBox = document.getElementById("result");
+            resBox.innerText = "正在批改，請稍候……";
+            try{
+                const resp = await fetch(PROXY_URL,{
+                    method:"POST",
+                    headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify({
+                        model:"deepseek-chat",
+                        messages:[
+                            {role:"system",content:"你係香港小學中文老師，專門為小四學生批改作文。用淺白中文，分三部分：錯字標註、句子改善建議、整體評語。"},
+                            {role:"user",content:請批改以下作文：${text}}
+                        ],
+                        temperature:0.7
+                    })
+                });
+                const data = await resp.json();
+                if(data?.choices?.[0]?.message?.content){
+                    resBox.innerText = data.choices[0].message.content;
+                }else{
+                    resBox.innerText = "取得回應失敗，請稍後再試。";
+                    console.log(data);
+                }
+            }catch(err){
+                resBox.innerText = "網絡連線錯誤！";
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>
