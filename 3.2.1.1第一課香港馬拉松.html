@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第一課《香港馬拉松》學習寶典</title>
+<style>
+  :root {
+    --theme-red: #D90429;      /* 馬拉松活力紅 */
+    --theme-blue: #0077B6;     /* 維港蔚藍 */
+    --theme-gold: #FFB703;     /* 榮耀金黃 */
+    --theme-bg: #FFF0F2;       /* 柔和粉紅/奶油背景 */
+    --card-bg: #FFFFFF;
+    --text-color: #2B2D42;
+  }
+
+  body {
+    font-family: "Microsoft JhengHei", "PingFang TC", Arial, sans-serif;
+    background-color: var(--theme-bg);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    /* 跑道與跑鞋風格幾何底紋 */
+    background-image: radial-gradient(var(--theme-red) 12%, transparent 12%), 
+                      radial-gradient(var(--theme-blue) 12%, transparent 12%);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
+    background-opacity: 0.15;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--theme-red), var(--theme-blue));
+    border-bottom: 5px solid var(--theme-gold);
+    padding: 20px 15px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  header h1 {
+    margin: 0;
+    color: var(--theme-gold);
+    font-size: 28px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+  }
+
+  header p {
+    margin: 6px 0 0 0;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+  }
+
+  /* 導航分頁列 */
+  nav {
+    display: flex;
+    justify-content: center;
+    background-color: var(--theme-blue);
+    flex-wrap: wrap;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+
+  nav button {
+    background-color: var(--theme-blue);
+    color: #FFFFFF;
+    border: none;
+    padding: 12px 18px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  nav button:hover, nav button.active {
+    background-color: var(--theme-gold);
+    color: var(--theme-blue);
+    border-bottom: 4px solid var(--theme-red);
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+
+  .page {
+    display: none;
+  }
+
+  .page.active {
+    display: block;
+  }
+
+  /* 卡片樣式 */
+  .card {
+    background-color: var(--card-bg);
+    border: 3px solid var(--theme-red);
+    border-radius: 15px;
+    padding: 18px 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    position: relative;
+  }
+
+  .card::before {
+    content: "🏃‍♂️";
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    opacity: 0.4;
+  }
+
+  .word-title {
+    font-size: 22px;
+    color: var(--theme-red);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .btn-audio {
+    background-color: var(--theme-red);
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.2s;
+  }
+
+  .btn-audio:hover {
+    background-color: #9E001C;
+  }
+
+  .btn-mandarin {
+    background-color: var(--theme-blue);
+  }
+  
+  .btn-mandarin:hover {
+    background-color: #005689;
+  }
+
+  .btn-ai {
+    background-color: #7209B7;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .btn-ai:hover {
+    background-color: #560BAD;
+  }
+
+  .cantonese-note {
+    background-color: #FFF0F2;
+    border-left: 5px solid var(--theme-red);
+    padding: 10px 12px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #800016;
+    border-radius: 0 8px 8px 0;
+  }
+
+  /* AI 回覆結果框 */
+  .ai-response-box {
+    margin-top: 12px;
+    padding: 12px 15px;
+    background-color: #F3E5F5;
+    border: 2px solid #AB47BC;
+    border-radius: 10px;
+    font-size: 15px;
+    line-height: 1.6;
+    display: none;
+  }
+
+  .api-key-box {
+    background: #E8EAF6;
+    border: 2px dashed #3F51B5;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+
+  .quiz-q {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: var(--theme-red);
+  }
+
+  .options label {
+    display: block;
+    background: #FAFAFA;
+    border: 1px solid #FFCDD2;
+    padding: 10px 14px;
+    margin: 6px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .options label:hover {
+    background: #FFEBEE;
+    border-color: var(--theme-red);
+  }
+
+  input[type="text"], input[type="password"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid var(--theme-red);
+    border-radius: 8px;
+    outline: none;
+  }
+
+  textarea {
+    width: 100%;
+    height: 75px;
+    font-size: 16px;
+    padding: 10px;
+    border: 2px solid var(--theme-red);
+    border-radius: 8px;
+    box-sizing: border-box;
+    margin-top: 8px;
+    outline: none;
+  }
+
+  .btn-submit {
+    background-color: var(--theme-red);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 30px;
+    cursor: pointer;
+    display: block;
+    margin: 25px auto;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  }
+
+  .btn-submit:hover {
+    background-color: #9E001C;
+  }
+
+  .score-box {
+    text-align: center;
+    background: white;
+    border: 4px dashed var(--theme-red);
+    padding: 30px;
+    border-radius: 20px;
+  }
+
+  .score-val {
+    font-size: 52px;
+    color: var(--theme-blue);
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🏃‍♂️ 馬拉松小將：第一課《香港馬拉松》 🏅</h1>
+  <p>挑戰自我 • 堅強意志 • 永不放棄衝終點！</p>
+</header>
+
+<nav>
+  <button onclick="showPage(1)" class="active" id="tab1">1. 詞語解釋與例句</button>
+  <button onclick="showPage(2)" id="tab2">2. 多項選擇題 (16題)</button>
+  <button onclick="showPage(3)" id="tab3">3. 填充練習 (16題)</button>
+  <button onclick="showPage(4)" id="tab4">4. 得分結算</button>
+  <button onclick="showPage(5)" id="tab5">5. 造句工作紙 (🤖 AI 語意檢查員)</button>
+</nav>
+
+<div class="container">
+
+  <!-- 頁面 1：詞語解釋與例句 -->
+  <div id="page1" class="page active">
+    <h2>📖 詞語解釋、例句與粵語/書面語對照</h2>
+    <div id="vocab-list"></div>
+  </div>
+
+  <!-- 頁面 2：多項選擇題 -->
+  <div id="page2" class="page">
+    <h2>✏️ 多項選擇題（共 16 題）</h2>
+    <div id="mc-list"></div>
+  </div>
+
+  <!-- 頁面 3：填充練習 -->
+  <div id="page3" class="page">
+    <h2>📝 填充練習（小三／小四難度，共 16 題）</h2>
+    <div id="fill-list"></div>
+  </div>
+
+  <!-- 頁面 4：得分結算 -->
+  <div id="page4" class="page">
+    <h2>🏆 學習成果結算</h2>
+    <div class="score-box">
+      <p style="font-size: 20px; color: var(--theme-blue);">點擊下方按鈕，計算選擇題與填充題的總分：</p>
+      <button class="btn-submit" onclick="calculateScore()">📊 計算我的分數</button>
+      <div id="score-result" style="margin-top: 20px;"></div>
+    </div>
+  </div>
+
+  <!-- 頁面 5：用 5 個生字造句 + AI 檢查 -->
+  <div id="page5" class="page">
+    <h2>✍️ 自由造句練習（🤖 Gemini 2.5 Flash 智能語法檢查）</h2>
+    
+    <div class="api-key-box">
+      <label for="apiKey">🔑 <b>設定 Gemini API Key：</b></label>
+      <input type="password" id="apiKey" placeholder="請在此貼上 Gemini API Key..." style="width: 60%;">
+      <p style="margin: 5px 0 0 0; font-size: 13px; color: #555;">(API Key 將僅在瀏覽器端使用，不會上傳儲存。)</p>
+    </div>
+
+    <div class="card" style="background-color: #FFF0F2; border-color: var(--theme-red);">
+      <h3 style="color: var(--theme-blue); margin-top:0;">💡 廣東話口語 ➔ 標準書面語 避坑小貼士：</h3>
+      <ul>
+        <li>❌ 廣東話口語：「觀眾喺度<b>加油/喊口號</b>」 ➔ ✅ 標準書面語：「觀眾在旁邊為跑手<b>打氣</b>」。</li>
+        <li>❌ 廣東話口語：「佢走去<b>報名參加</b>」 ➔ ✅ 標準書面語：「他<b>報名</b>參加馬拉松」。</li>
+        <li>❌ 廣東話口語：「佢好<b>強/好勁</b>」 ➔ ✅ 標準書面語：「這位跑手十分<b>厲害</b>」。</li>
+      </ul>
+    </div>
+
+    <div id="sentence-building"></div>
+
+    <button class="btn-submit" onclick="checkAllSentencesWithAI()" style="background-color: #7209B7;">🤖 批量讓 AI 檢查所有造句！</button>
+  </div>
+
+</div>
+
+<script>
+// 詞語資料庫 (18個)
+const vocabData = [
+  { w: "1. 熒幕", m: "電視、顯示器可以顯示畫面的板面。", e: "我們透過熒幕觀看香港馬拉松比賽。", hk: "口語講「電視畫面/螢幕」，書面語寫作「熒幕」。" },
+  { w: "2. 目瞪口呆", m: "因為驚訝，睜大雙眼、說不出話。", e: "選手驚人的耐力，令我看得目瞪口呆。", hk: "口語講「呆咗/傻眼」，書面語寫作「目瞪口呆」。" },
+  { w: "3. 猶豫", m: "遲疑不決，難以作出決定。", e: "他猶豫了很久，終於決定報名參加馬拉松。", hk: "口語講「諗來諗去/諗唔定」，書面語寫作「猶豫」。" },
+  { w: "4. 大汗淋漓", m: "汗水不斷流出，滿身都是汗。", e: "跑手長途奔跑，大汗淋漓，仍然繼續前進。", hk: "口語講「出到滿頭大汗」，書面語寫作「大汗淋漓」。" },
+  { w: "5. 濕透", m: "被水浸到完全濕。", e: "汗水把跑手的運動衫濕透了。", hk: "口語講「濕晒」，書面語寫作「濕透」。" },
+  { w: "6. 打瞌睡", m: "忍不住閉眼小睡、昏昏欲睡。", e: "長途訓練後，他累得想要打瞌睡。", hk: "口語講「瞌眼瞓」，書面語寫作「打瞌睡」。" },
+  { w: "7. 考驗", m: "測試人能力、耐力的事情。", e: "馬拉松是對體力和精神的一大考驗。", hk: "口語講「考驗/試驗」，書面語寫作「考驗」。" },
+  { w: "8. 挑戰", m: "嘗試去完成困難的事情。", e: "我希望挑戰自己，完成十公里長跑。", hk: "口語講「挑戰/試吓挑戰」，書面語寫作「挑戰」。" },
+  { w: "9. 意志", m: "堅持目標不放棄的心力。", e: "憑著堅強的意志，跑手衝向終點。", hk: "口語講「意志力/毅力」，書面語寫作「意志」。" },
+  { w: "10. 馬拉松", m: "一項長距離的跑步比賽。", e: "每年很多人參加香港馬拉松。", hk: "口語講「馬拉松」，書面語寫作「馬拉松」。" },
+  { w: "11. 身影", m: "人體輪廓、人影。", e: "道路上可以見到無數跑手的身影。", hk: "口語講「人影/身影」，書面語寫作「身影」。" },
+  { w: "12. 報名", m: "登記參加活動或比賽。", e: "爸爸打算報名參加馬拉松比賽。", hk: "口語講「報名/填表參加」，書面語寫作「報名」。" },
+  { w: "13. 重複", m: "一次又一次不斷做同樣的事。", e: "跑手每天重複練習，增強體能。", hk: "口語講「重覆做/不斷做」，書面語寫作「重複」。" },
+  { w: "14. 附近", m: "距離不遠的地方。", e: "比賽路線會途經維多利亞公園附近。", hk: "口語講「附近/隔籬」，書面語寫作「附近」。" },
+  { w: "15. 堅持", m: "遇到困難也不放棄。", e: "就算腳部酸痛，跑手仍然堅持跑畢全程。", hk: "口語講「硬撐/堅持」，書面語寫作「堅持」。" },
+  { w: "16. 途經", m: "行路時經過某個地方。", e: "馬拉松賽道會途經多條主要街道。", hk: "口語講「經過/經由」，書面語寫作「途經」。" },
+  { w: "17. 打氣", m: "鼓勵別人，給人力量。", e: "路旁的觀眾不停為跑手打氣。", hk: "口語講「加油/打氣」，書面語寫作「打氣」。" },
+  { w: "18. 厲害", m: "能力強，表現出色。", e: "這位跑手只用三小時完成賽事，十分厲害。", hk: "口語講「好勁/好厲害」，書面語寫作「厲害」。" }
+];
+
+// 多項選擇題 (16題)
+const mcQuestions = [
+  { q: "「目瞪口呆」通常是用來形容怎樣的神情？", options: ["A. 因極度驚訝而睜大雙眼說不出話", "B. 生氣地狠狠看著別人", "C. 睏倦地閉上眼睛"], ans: "A" },
+  { q: "「大汗淋漓」是用來形容什麼情況？", options: ["A. 汗水大量流出，全身濕透", "B. 淋雨後感冒", "C. 水龍頭不停漏水"], ans: "A" },
+  { q: "「猶豫」的意思是？", options: ["A. 遲疑不決，難以做出決定", "B. 快速下定決心", "C. 高興地答應"], ans: "A" },
+  { q: "「打瞌睡」在廣東話口語中通常指什麼？", options: ["A. 瞌眼瞓（忍不住閉眼小睡）", "B. 敲打桌面發出聲音", "C. 起床做運動"], ans: "A" },
+  { q: "「馬拉松」是一項怎樣的運動項目？", options: ["A. 短跑衝刺比賽", "B. 長距離的跑步比賽", "C. 跳高比賽"], ans: "B" },
+  { q: "「憑著堅強的（  ），他克服了傷患衝向終點。」括號內應填？", options: ["A. 意志", "B. 熒幕", "C. 附近"], ans: "A" },
+  { q: "「路旁聚集了許多民眾，為選手們加油（  ）。」括號內應填？", options: ["A. 打氣", "B. 打瞌睡", "C. 猶豫"], ans: "A" },
+  { q: "「馬拉松賽道將會（  ）中環與灣仔的多條主要道路。」括號應填？", options: ["A. 途經", "B. 重複", "C. 濕透"], ans: "A" },
+  { q: "「這項比賽對運動員的體力來說是一個巨大的（  ）。」括號應填？", options: ["A. 考驗", "B. 報名", "C. 熒幕"], ans: "A" },
+  { q: "「就算感到疲倦，我們也要（  ）到底，絕不放棄。」括號應填？", options: ["A. 堅持", "B. 猶豫", "C. 打瞌睡"], ans: "A" },
+  { q: "「大家透過體育館大型（  ）觀看現場賽事轉播。」括號應填？", options: ["A. 熒幕", "B. 身影", "C. 意志"], ans: "A" },
+  { q: "「他跑步的速度非常快，成果令人佩服，真的很（  ）。」括號應填？", options: ["A. 厲害", "B. 濕透", "C. 途經"], ans: "A" },
+  { q: "「跑完長跑後，他的運動服完全被汗水（  ）了。」括號應填？", options: ["A. 濕透", "B. 報名", "C. 挑戰"], ans: "A" },
+  { q: "「想要參加明年的賽事，必須先在官方網站（  ）。」括號應填？", options: ["A. 報名", "B. 考驗", "C. 打氣"], ans: "A" },
+  { q: "「陽光下，跑道上拉長了選手們奔跑的（  ）。」括號應填？", options: ["A. 身影", "B. 附近", "C. 重複"], ans: "A" },
+  { q: "「為了提高體能，跑手每天都要（  ）進行艱苦訓練。」括號應填？", options: ["A. 重複", "B. 打瞌睡", "C. 目瞪口呆"], ans: "A" }
+];
+
+// 填充題 (16題)
+const fillQuestions = [
+  { q: "全場觀眾透過電視（   ）觀看到賽跑選手衝過終點的一刻。", ans: "熒幕" },
+  { q: "看見那位年長的跑手順利完成全程，大家都驚訝得（   ）。", ans: "目瞪口呆" },
+  { q: "面對艱巨的任務，他沒有絲毫（   ），立刻答應挑戰。", ans: "猶豫" },
+  { q: "經過連續數小時的長途奔跑，運動員個個（   ）。", ans: "大汗淋漓" },
+  { q: "一陣大雨突如其來，把場外觀眾的衣服都（   ）了。", ans: "濕透" },
+  { q: "由於昨晚沒有休息好，他在課堂上忍不住（   ）。", ans: "打瞌睡" },
+  { q: "嚴寒的天氣對所有馬拉松選手來說都是一項嚴峻的（   ）。", ans: "考驗" },
+  { q: "今年我打算（   ）自我，報名參加十公里跑步賽事。", ans: "挑戰" },
+  { q: "只要擁有堅強的（   ），就沒有克服不了的困難。", ans: "意志" },
+  { q: "一年一度的香港（   ）吸引了來自世界各地的跑手。", ans: "馬拉松" },
+  { q: "晨光中，運動場上已經可以看到運動員練習的（   ）。", ans: "身影" },
+  { q: "這項社區跑步活動免費開放給所有市民（   ）參加。", ans: "報名" },
+  { q: "優秀的成績源於每天不厭其煩地（   ）練習。", ans: "重複" },
+  { q: "比賽終點設在維多利亞公園（   ），方便民眾觀賽。", ans: "附近" },
+  { q: "無論過程多麼艱辛，我們都要（   ）下去。", ans: "堅持" },
+  { q: "賽跑路線將會（   ）多個香港著名地標。", ans: "途經" }
+];
+
+// 5個造句生字
+const sentenceWords = ["堅持", "挑戰", "打氣", "意志", "厲害"];
+
+// 語音朗讀功能 (Web Speech API)
+function speakText(text, lang) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = lang; // 'zh-HK' 廣東話, 'zh-CN' 普通話
+    window.speechSynthesis.speak(utterance);
+  } else {
+    alert("你的瀏覽器暫時不支援語音朗讀功能。");
+  }
+}
+
+// 頁面切換
+function showPage(pageNum) {
+  for(let i=1; i<=5; i++) {
+    document.getElementById('page'+i).classList.remove('active');
+    document.getElementById('tab'+i).classList.remove('active');
+  }
+  document.getElementById('page'+pageNum).classList.add('active');
+  document.getElementById('tab'+pageNum).classList.add('active');
+}
+
+// 初始化頁面 1
+function initPage1() {
+  const container = document.getElementById('vocab-list');
+  vocabData.forEach((item) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="word-title">
+        <span>${item.w}</span>
+        <div>
+          <button class="btn-audio" onclick="speakText('${item.w}。解釋：${item.m}。例句：${item.e}', 'zh-HK')">🔊 廣東話發音</button>
+          <button class="btn-audio btn-mandarin" onclick="speakText('${item.w}。解釋：${item.m}。例句：${item.e}', 'zh-CN')">🗣️ 普通話發音</button>
+        </div>
+      </div>
+      <p><b>【解釋】：</b>${item.m}</p>
+      <p><b>【例句】：</b>${item.e}</p>
+      <div class="cantonese-note"><b>💬 粵語 vs 標準書面語對照：</b>${item.hk}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// 初始化頁面 2 (MC)
+function initPage2() {
+  const container = document.getElementById('mc-list');
+  mcQuestions.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    let optionsHtml = '';
+    q.options.forEach(opt => {
+      optionsHtml += `<label><input type="radio" name="mc_${idx}" value="${opt[0]}"> ${opt}</label>`;
+    });
+
+    card.innerHTML = `
+      <div class="quiz-q">
+        第 ${idx+1} 題：${q.q}
+        <button class="btn-audio" onclick="speakText('${q.q}', 'zh-HK')">🔊 朗讀題目</button>
+      </div>
+      <div class="options">${optionsHtml}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// 初始化頁面 3 (Fill)
+function initPage3() {
+  const container = document.getElementById('fill-list');
+  fillQuestions.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="quiz-q">第 ${idx+1} 題：${q.q}</div>
+      <div>答案：<input type="text" id="fill_${idx}" placeholder="請在此輸入詞語..." style="width:60%;"></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// 初始化頁面 5 (造句 + AI)
+function initPage5() {
+  const container = document.getElementById('sentence-building');
+  sentenceWords.forEach((word, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="word-title">題目 ${idx+1}：用「<b>${word}</b>」造句</div>
+      <p style="color:#666; font-size:14px;">（提示：請確保語句完整，並使用標準書面語，避免使用廣東話口語。）</p>
+      <textarea id="sent_${idx}" placeholder="例如：即使比賽過程非常辛苦，跑手仍然憑著堅強的意志堅持下去。"></textarea>
+      <button class="btn-ai" onclick="checkSentenceWithAI(${idx}, '${word}')">🤖 讓 Gemini 2.5 Flash 檢查第 ${idx+1} 句</button>
+      <div id="ai_res_${idx}" class="ai-response-box"></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// 呼叫 Gemini 2.5 Flash API 檢查單句
+async function checkSentenceWithAI(idx, word) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const userSentence = document.getElementById(`sent_${idx}`).value.trim();
+  const resBox = document.getElementById(`ai_res_${idx}`);
+
+  if (!apiKey) {
+    alert("⚠️ 請先在上方輸入有效的 Gemini API Key！");
+    return;
+  }
+  if (!userSentence) {
+    alert("⚠️ 請先輸入造句內容再進行檢查喔！");
+    return;
+  }
+
+  resBox.style.display = "block";
+  resBox.innerHTML = "⏳ <b>Gemini AI 老師正在仔細批改中，請稍候...</b>";
+
+  const systemPrompt = `You are a friendly, encouraging primary school Chinese teacher in Hong Kong.
+Evaluate the student's Chinese sentence based on the target word: "${word}".
+
+Rules:
+1. Logic & Common Sense Check: Flag if it violates basic facts or logic.
+2. Standard Written Chinese Check: Identify Cantonese spoken words (e.g., "加油" -> "打氣", "好勁" -> "厲害") and urge standard written usage.
+3. Grammar & Target Word Check: Verify proper sentence structure and natural use of target word "${word}".
+4. Tone: Gentle, encouraging, simple language suitable for Primary 3/4 students.
+
+Format the output cleanly in Traditional Chinese:
+🌟 **整體評語**：(親切鼓勵)
+🔍 **檢查發現**：
+- 邏輯常識：[通過 / 需要修正]
+- 書面語規範：[通過 / 需要修正 (指出口語字眼)]
+- 目標詞語使用：[通過 / 需要修正]
+✏️ **建議改寫**：(給出完整標準的改寫句子)
+💡 **學習小貼士**：(簡單說明原因)`;
+
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          { role: "user", parts: [{ text: `${systemPrompt}\n\n學生輸入的句子：${userSentence}` }] }
+        ]
+      })
+    });
+
+    const data = await response.json();
+    if (data.candidates && data.candidates[0].content.parts[0].text) {
+      let reply = data.candidates[0].content.parts[0].text;
+      reply = reply.replace(/\n/g, "<br>");
+      resBox.innerHTML = reply;
+    } else {
+      resBox.innerHTML = "❌ 檢查失敗，請檢查 API Key 是否正確。";
+    }
+  } catch (error) {
+    resBox.innerHTML = "❌ 發生錯誤：" + error.message;
+  }
+}
+
+// 批量檢查所有造句
+async function checkAllSentencesWithAI() {
+  for (let i = 0; i < sentenceWords.length; i++) {
+    const userSentence = document.getElementById(`sent_${i}`).value.trim();
+    if (userSentence) {
+      await checkSentenceWithAI(i, sentenceWords[i]);
+    }
+  }
+}
+
+// 得分計算 (Page 4)
+function calculateScore() {
+  let mcScore = 0;
+  let fillScore = 0;
+
+  mcQuestions.forEach((q, idx) => {
+    const selected = document.querySelector(`input[name="mc_${idx}"]:checked`);
+    if (selected && selected.value === q.ans) {
+      mcScore += (50 / 16);
+    }
+  });
+
+  fillQuestions.forEach((q, idx) => {
+    const inputVal = document.getElementById(`fill_${idx}`).value.trim();
+    if (inputVal === q.ans) {
+      fillScore += (50 / 16);
+    }
+  });
+
+  const totalScore = Math.round(mcScore + fillScore);
+  const resultDiv = document.getElementById('score-result');
+
+  let comment = "";
+  if (totalScore === 100) {
+    comment = "🎉 太棒了！你是馬拉松比賽的語文冠軍小將！全對！";
+  } else if (totalScore >= 80) {
+    comment = "👏 表現非常優秀！展現了堅強的學習意志！";
+  } else if (totalScore >= 60) {
+    comment = "👍 合格了！再仔細複習一下錯題會更好喔！";
+  } else {
+    comment = "💪 不要灰心，翻去第一頁多複習幾遍再試試看吧！";
+  }
+
+  resultDiv.innerHTML = `
+    <div class="score-val">${totalScore} 分</div>
+    <p style="font-size: 18px; color: #555;">(選擇題得分：${Math.round(mcScore)} / 填充題得分：${Math.round(fillScore)})</p>
+    <h3>${comment}</h3>
+  `;
+}
+
+// 初始化執行
+window.onload = function() {
+  initPage1();
+  initPage2();
+  initPage3();
+  initPage5();
+};
+</script>
+
+</body>
+</html>
